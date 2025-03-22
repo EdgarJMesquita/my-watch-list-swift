@@ -64,7 +64,8 @@ class ShowDetailsView: UIView {
     
     lazy var overviewLabel: UILabel = {
         let label = UILabel()
-        label.numberOfLines = 0
+        label.numberOfLines = 5
+        label.lineBreakMode = .byTruncatingTail
         label.textColor = .mwlTitle.withAlphaComponent(0.7)
         label.font = UIFont.systemFont(ofSize: 20, weight: .semibold)
         label.font = UIFont.systemFont(ofSize: 16, weight: .regular)
@@ -99,6 +100,23 @@ class ShowDetailsView: UIView {
         return label
     }()
     
+    lazy var durationLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 0
+        label.textColor = .mwlGray
+        label.font = UIFont.systemFont(ofSize: 16, weight: .regular)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    lazy var spokenLanguageLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 0
+        label.textColor = .mwlGray
+        label.font = UIFont.systemFont(ofSize: 16, weight: .regular)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
     
     private lazy var castLabel: UILabel = {
         let label = UILabel()
@@ -114,26 +132,62 @@ class ShowDetailsView: UIView {
         MWLCastCollectionView()
     }()
     
-    
-    
-    lazy var videosLabel: UILabel = {
+    lazy var producersLabel: UILabel = {
         let label = UILabel()
-        label.text = "Videos"
+        label.text = "Producers"
         label.textColor = .mwlTitle
-        label.alpha = 0
         label.font = UIFont.systemFont(ofSize: 20, weight: .semibold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
+    lazy var producersCollectionView: MWLProducersCollectionView = {
+        let collectionView = MWLProducersCollectionView()
+        return collectionView
+    }()
+    
+    lazy var videosLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Videos"
+        label.textColor = .mwlTitle
+        label.font = UIFont.systemFont(ofSize: 20, weight: .semibold)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
     
     lazy var videosCollectionView: MWLVideosCollectionView = {
         let collectionView = MWLVideosCollectionView()
-        collectionView.alpha = 0
+        return collectionView
+    }()
+    
+    lazy var imagesLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Photos"
+        label.textColor = .mwlTitle
+        label.font = UIFont.systemFont(ofSize: 20, weight: .semibold)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    lazy var imagesCollectionView: MWLImagesCollectionView = {
+        let collectionView = MWLImagesCollectionView()
+        return collectionView
+    }()
+    
+    private lazy var recommendationsLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Recommendations"
+        label.textColor = .mwlTitle
+        label.font = UIFont.systemFont(ofSize: 20, weight: .semibold)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    lazy var recommendationsCollectionView: MWLCreditsCollectionView = {
+        let collectionView = MWLCreditsCollectionView()
         return collectionView
     }()
 
-    
     init() {
         super.init(frame: .zero)
         setupUI()
@@ -168,11 +222,19 @@ class ShowDetailsView: UIView {
         contentView.addSubview(overviewLabel)
         contentView.addSubview(detailsLabel)
         contentView.addSubview(genresLabel)
+        contentView.addSubview(durationLabel)
+        contentView.addSubview(spokenLanguageLabel)
         contentView.addSubview(countryLabel)
         contentView.addSubview(castLabel)
         contentView.addSubview(castCollectionView)
+        contentView.addSubview(producersLabel)
+        contentView.addSubview(producersCollectionView)
         contentView.addSubview(videosLabel)
         contentView.addSubview(videosCollectionView)
+        contentView.addSubview(imagesLabel)
+        contentView.addSubview(imagesCollectionView)
+        contentView.addSubview(recommendationsLabel)
+        contentView.addSubview(recommendationsCollectionView)
     }
     
     private func setupConstraints(){
@@ -190,14 +252,20 @@ class ShowDetailsView: UIView {
             genresLabel,
             countryLabel,
             castLabel,
-            videosLabel
+            producersLabel,
+            videosLabel,
+            imagesLabel,
+            videosLabel,
+            durationLabel,
+            spokenLanguageLabel,
+            recommendationsLabel
         ].forEach {
             $0.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: padding).isActive = true
             $0.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -padding).isActive = true
         }
         
         NSLayoutConstraint.activate([
-            contentView.heightAnchor.constraint(equalToConstant: 3 * 430),
+            contentView.heightAnchor.constraint(equalToConstant: 3 * 600),
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
             contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             
@@ -221,16 +289,29 @@ class ShowDetailsView: UIView {
 
             
             countryLabel.topAnchor.constraint(equalTo: genresLabel.bottomAnchor, constant: padding / 2),
+            
+            durationLabel.topAnchor.constraint(equalTo: countryLabel.bottomAnchor, constant: padding / 2),
+            
+            spokenLanguageLabel.topAnchor.constraint(equalTo: durationLabel.bottomAnchor, constant: padding / 2),
 
-            castLabel.topAnchor.constraint(equalTo: countryLabel.bottomAnchor, constant: padding),
+            castLabel.topAnchor.constraint(equalTo: spokenLanguageLabel.bottomAnchor, constant: padding),
             
             castCollectionView.topAnchor.constraint(equalTo: castLabel.bottomAnchor, constant: padding / 2),
             castCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             castCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            castCollectionView.heightAnchor.constraint(equalToConstant: 100),
+            castCollectionView.heightAnchor.constraint(equalToConstant: 120),
             
             
-            videosLabel.topAnchor.constraint(equalTo: castCollectionView.bottomAnchor, constant: padding),
+            producersLabel.topAnchor.constraint(equalTo: castCollectionView.bottomAnchor, constant: padding),
+            
+            producersCollectionView.topAnchor.constraint(equalTo: producersLabel.bottomAnchor, constant: padding / 2),
+            
+            producersCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            producersCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            producersCollectionView.heightAnchor.constraint(equalToConstant: 90),
+            
+            
+            videosLabel.topAnchor.constraint(equalTo: producersCollectionView.bottomAnchor, constant: padding),
             
             videosCollectionView.topAnchor.constraint(equalTo: videosLabel.bottomAnchor, constant: padding / 2),
             
@@ -238,15 +319,30 @@ class ShowDetailsView: UIView {
             videosCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             videosCollectionView.heightAnchor.constraint(equalToConstant: 100),
             
+            
+            imagesLabel.topAnchor.constraint(equalTo: videosCollectionView.bottomAnchor, constant: padding),
+            
+            imagesCollectionView.topAnchor.constraint(equalTo: imagesLabel.bottomAnchor, constant: padding / 2),
+            
+            imagesCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            imagesCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            imagesCollectionView.heightAnchor.constraint(equalToConstant: 100),
+            
+            recommendationsLabel.topAnchor.constraint(equalTo: imagesCollectionView.bottomAnchor),
+            
+            recommendationsCollectionView.topAnchor.constraint(equalTo:recommendationsLabel.bottomAnchor, constant: padding / 2 ),
+            recommendationsCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            recommendationsCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            
         ])
     }
     
 }
 
 #Preview {
-    DetailsVC(
+    ShowDetailsVC(
         contentView: ShowDetailsView(),
         show: Show.buildMock(),
-        viewModel: DetailsViewModel()
+        viewModel: ShowDetailsViewModel()
     )
 }

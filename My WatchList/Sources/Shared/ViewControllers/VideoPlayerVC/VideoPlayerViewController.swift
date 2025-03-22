@@ -1,5 +1,5 @@
 //
-//  VideoPlayerViewController.swift
+//  VideoPlayerVC.swift
 //  My WatchList
 //
 //  Created by Edgar Jonas Mesquita da Silva on 20/03/25.
@@ -8,7 +8,7 @@
 import UIKit
 import WebKit
 
-class VideoPlayerViewController: UIViewController {
+class VideoPlayerVC: UIViewController {
     private let video: Video
     
     private lazy var activityIndicator: UIActivityIndicatorView = {
@@ -126,7 +126,7 @@ class VideoPlayerViewController: UIViewController {
 }
 
 
-extension VideoPlayerViewController: WKNavigationDelegate {
+extension VideoPlayerVC: WKNavigationDelegate {
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         activityIndicator.stopAnimating()
     }

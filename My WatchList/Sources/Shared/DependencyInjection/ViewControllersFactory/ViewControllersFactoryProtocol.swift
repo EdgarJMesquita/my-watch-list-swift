@@ -14,5 +14,11 @@ protocol ViewControllersFactoryProtocol: AnyObject {
 
     func makeTabBarVC(flowDelegate: TabBarFlowDelegate) -> MWLTabBarController
     
-    func makeDetailsVC(flowDelegate: GoBackFlowDelegate, show: Show) -> DetailsVC
+    func makeDetailsVC(flowDelegate: ShowDetailsFlowDelegate, show: Show) -> ShowDetailsVC
+    
+    func makePersonDetailsVC(flowDelegate: PersonDetailsFlowDelegate, personId: Int) -> PersonDetailsVC
+    
+    func makeVideoPlayerVC(video: Video) -> VideoPlayerVC
+    
+    func makeFullScreenImageVC(imagePath: String) -> FullScreenImageViewVC
 }

@@ -71,6 +71,7 @@ class HomeVC: UIViewController {
         containerView.addSubview(childVC.view)
         childVC.view.frame = containerView.bounds
         childVC.didMove(toParent: self)
+
     }
     
 }

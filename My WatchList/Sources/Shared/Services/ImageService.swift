@@ -11,25 +11,23 @@ class ImageService {
     
     static let shared = ImageService()
     
-    private let baseURL = "http://www.omdbapi.com"
-    private let apiKey: String
+    private let tmdbBaseURL = "https://image.tmdb.org/t/p/w500/"
+    
+    private let youtubeThumbBaseURL = "https://img.youtube.com/vi/"
+  
     
     let cache = NSCache<NSString, UIImage>()
     
-    init(){
-        apiKey = EnvManager.get(key: .omdbAPIKey) ?? ""
-    }
-    
-    func download(imdbId: String) async -> UIImage? {
-        let stringUrl = "\(baseURL)&apikey=\(apiKey)&i=\(imdbId)"
+    func downloadTMDBImage(path: String) async -> UIImage? {
+        let urlString = "\(tmdbBaseURL)\(path)"
         
-        let cacheKey = NSString(string: stringUrl)
-
+        guard let url = URL(string: urlString) else { return nil }
+        
+        let cacheKey = NSString(string: urlString)
+        
         if let image = cache.object(forKey: cacheKey) {
             return image
         }
-
-        guard let url = URL(string: stringUrl) else { return nil }
 
         do {
             let (data, response) = try await URLSession.shared.data(from: url)
@@ -44,4 +42,52 @@ class ImageService {
             return nil
         }
     }
+    
+    func downloadThumbnail(for video: Video) async -> UIImage? {
+        guard 
+            let urlString = getThumbUrl(from: video),
+            let url = URL(string: urlString)
+        else {
+            return nil
+        }
+        
+        let cacheKey = NSString(string: urlString)
+        
+        if let image = cache.object(forKey: cacheKey) {
+            return image
+        }
+
+        do {
+            let (data, response) = try await URLSession.shared.data(from: url)
+            guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
+                return nil
+            }
+            guard let image = UIImage(data: data) else { return nil }
+            cache.setObject(image, forKey: cacheKey)
+            return image
+        } catch {
+            print(error)
+            return nil
+        }
+    }
+    
+    private func getThumbUrl(from video: Video) -> String? {
+        switch video.site {
+            case "YouTube":
+                return getYoutubeThumbUrl(videoId: video.key)
+            case "Vimeo":
+                return getVimeoThumbUrl(videoId: video.key)
+            default:
+                return nil
+        }
+    }
+    
+    private func getYoutubeThumbUrl(videoId: String) -> String {
+        return "\(youtubeThumbBaseURL)\(videoId)/0.jpg"
+    }
+    
+    private func getVimeoThumbUrl(videoId: String) -> String {
+        return "https://vumbnail.com/\(videoId).jpg"
+    }
+    
 }

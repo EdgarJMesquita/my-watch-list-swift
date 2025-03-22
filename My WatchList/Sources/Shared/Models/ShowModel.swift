@@ -25,9 +25,9 @@ struct Result: Codable {
 struct Show: Codable {
     let adult: Bool
     let backdropPath: String?
-    let genreIDS: [Int]
+    
     let id: Int
-    let originalLanguage: String
+    let originalLanguage: String?
     let originalTitle: String?
     let originalName: String?
     let overview: String
@@ -44,7 +44,7 @@ struct Show: Codable {
     enum CodingKeys: String, CodingKey {
         case adult
         case backdropPath = "backdrop_path"
-        case genreIDS = "genre_ids"
+        
         case id
         case originalLanguage = "original_language"
         case originalTitle = "original_title"
@@ -62,15 +62,14 @@ struct Show: Codable {
         return name ?? title ?? "Unknown"
     }
     
+    func getType() -> TMDBType {
+        return title != nil ? .movie : .tv
+    }
+    
     static func buildMock() -> Show {
         let show = Show(
             adult: false,
             backdropPath: "/gFFqWsjLjRfipKzlzaYPD097FNC.jpg",
-            genreIDS: [
-             28,
-             53,
-             80
-            ],
             id: 1126166,
             originalLanguage: "en",
             originalTitle: "Flight Risk",

@@ -9,12 +9,11 @@ import UIKit
 
 class MWLCastViewCell: UICollectionViewCell {
     static let identifier = "MWLCastViewCell"
-    weak var delegate: CastViewCellDelegate?
-    
+
     private lazy var avatarImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
-        imageView.layer.cornerRadius = 30
+        imageView.layer.cornerRadius = 45
         imageView.clipsToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -40,12 +39,12 @@ class MWLCastViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(with cast: Cast){
-        nameLabel.text = cast.name
+    func configure(imagePath: String?, title: String){
+        nameLabel.text = title
 
         Task {
             if
-                let profilePath = cast.profilePath,
+                let profilePath = imagePath,
                 let image = await ImageService.shared.downloadTMDBImage(path: profilePath)
             {
                 avatarImageView.image = image
@@ -71,8 +70,8 @@ class MWLCastViewCell: UICollectionViewCell {
             avatarImageView.topAnchor.constraint(equalTo: contentView.topAnchor),
             avatarImageView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
 
-            avatarImageView.widthAnchor.constraint(equalToConstant: 60),
-            avatarImageView.heightAnchor.constraint(equalToConstant: 60),
+            avatarImageView.widthAnchor.constraint(equalToConstant: 90),
+            avatarImageView.heightAnchor.constraint(equalToConstant: 90),
             
             nameLabel.topAnchor.constraint(equalTo: avatarImageView.bottomAnchor, constant: 4),
             nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
@@ -81,14 +80,12 @@ class MWLCastViewCell: UICollectionViewCell {
     }
 }
 
-protocol CastViewCellDelegate: AnyObject {
-  
-}
+
 
 #Preview {
-    DetailsVC(
-        contentView: DetailsView(),
+    ShowDetailsVC(
+        contentView: ShowDetailsView(),
         show: Show.buildMock(),
-        viewModel: DetailsViewModel()
+        viewModel: ShowDetailsViewModel()
     )
 }

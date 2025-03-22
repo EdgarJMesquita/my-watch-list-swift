@@ -11,10 +11,8 @@ class BannerVC: UIViewController {
     
     let viewModel: ShowViewModel
     
-    
     lazy var bannerImageView: UIImageView = {
         let imageView = UIImageView()
-//        imageView.contentMode = .
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -119,7 +117,7 @@ class BannerVC: UIViewController {
             return
         }
  
-        let image = await viewModel.downloadImage(path: path)
+        let image = await ImageService.shared.downloadTMDBImage(path: path)
         bannerImageView.image = image
         bannerImageView.addFadingFooter()
     }
@@ -132,7 +130,7 @@ class BannerVC: UIViewController {
 
     private func setupHierarchy() {
         view.addSubview(bannerImageView)
-        view.addSubview(filter)
+//        view.addSubview(filter)
         
         stackView.addArrangedSubview(myListLabel)
         stackView.addArrangedSubview(exploreLabel)
@@ -158,10 +156,10 @@ class BannerVC: UIViewController {
             bannerImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             bannerImageView.heightAnchor.constraint(equalToConstant: bannerHeight),
 
-            filter.topAnchor.constraint(equalTo: view.topAnchor, constant: 40),
-            filter.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            filter.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            filter.heightAnchor.constraint(equalToConstant: 47),
+//            filter.topAnchor.constraint(equalTo: view.topAnchor, constant: 40),
+//            filter.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+//            filter.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+//            filter.heightAnchor.constraint(equalToConstant: 47),
             
             stackView.topAnchor.constraint(equalTo: bannerImageView.bottomAnchor,constant: -50),
             stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),

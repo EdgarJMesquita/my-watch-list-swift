@@ -5,4 +5,13 @@
 //  Created by Edgar Jonas Mesquita da Silva on 21/03/25.
 //
 
-import Foundation
+import UIKit
+
+class SearchView: UIView {
+    
+}
+
+
+#Preview {
+    SearchVC(contentView: SearchView())
+}

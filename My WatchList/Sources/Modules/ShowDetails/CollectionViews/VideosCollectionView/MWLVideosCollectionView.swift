@@ -10,6 +10,7 @@ import UIKit
 
 class MWLVideosCollectionView: UICollectionView {
     private var videos: [Video] = []
+    weak var customDelegate: MWLVideosColletionViewDelegate?
     
     init(){
         let layout = UICollectionViewFlowLayout()
@@ -27,11 +28,17 @@ class MWLVideosCollectionView: UICollectionView {
         translatesAutoresizingMaskIntoConstraints = false
         
         dataSource = self
+        
+        delegate = self
     }
     
     func configure(with videos:[Video]){
         self.videos = videos
         reloadData()
+    }
+    
+    func showEmptyMessage(){
+        self.setEmptyMessage("No videos")
     }
     
     required init?(coder: NSCoder) {
@@ -60,4 +67,17 @@ extension MWLVideosCollectionView: UICollectionViewDataSource {
     }
     
 }
+
+
+extension MWLVideosCollectionView: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let video = videos[indexPath.item]
+        customDelegate?.didTapVideo(video: video)
+    }
+}
+
+protocol MWLVideosColletionViewDelegate: AnyObject {
+    func didTapVideo(video: Video)
+}
+
 

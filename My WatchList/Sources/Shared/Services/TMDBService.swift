@@ -27,12 +27,12 @@ class TMDBService {
     private let baseURL = "https://api.themoviedb.org/3"
 
    
-    func getData(type: TMDBType, category: TMDBCategory) async throws -> [Show] {
+    private func request<T>(with urlString: String, model: T.Type) async throws -> T where T : Decodable {
         guard let apiKey = EnvManager.get(key: .tmdbAPIKey) else {
             throw MWLError.missingConfigFile
         }
 
-        guard let url = URL(string: "\(baseURL)/\(type.rawValue)/\(category.rawValue)") else {
+        guard let url = URL(string: urlString) else {
             throw MWLError.invalidURL
         }
 
@@ -48,7 +48,7 @@ class TMDBService {
                 throw MWLError.invalidResponse
             }
 
-            return try JSONDecoder().decode(Result.self, from: data).results
+            return try JSONDecoder().decode(model, from: data)
 
         } catch {
             print(error)
@@ -57,76 +57,18 @@ class TMDBService {
 
     }
     
-    func getDetails(for movieId: Int, category: TMDBCategory) async throws -> Credits {
-        guard let apiKey = EnvManager.get(key: .tmdbAPIKey) else {
-            throw MWLError.missingConfigFile
-        }
-
-        guard let url = URL(string: "\(baseURL)/\(category.rawValue)/\(movieId)/credits") else {
-            throw MWLError.invalidURL
-        }
-
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-
-        do {
-            let (data, response) = try await URLSession.shared.data(for: request)
-
-            guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-                throw MWLError.invalidResponse
-            }
-
-            return try JSONDecoder().decode(Credits.self, from: data)
-
-        } catch {
-            print(error)
-            throw MWLError.invalidResponse
-        }
-
+    func getShows(type: TMDBType, category: TMDBCategory) async throws -> [Show] {
+        let urlString = "\(baseURL)/\(type.rawValue)/\(category.rawValue)"
+        return try await request(with: urlString, model: Result.self).results
     }
     
-    func downloadImage(path: String) async -> UIImage? {
-        let urlString = "https://image.tmdb.org/t/p/w500/\(path)"
-        
-        guard let url = URL(string: urlString) else { return nil }
-        
-        let cacheKey = NSString(string: urlString)
-        
-        if let image = cache.object(forKey: cacheKey) {
-            return image
-        }
-
-        do {
-            let (data, response) = try await URLSession.shared.data(from: url)
-            guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-                return nil
-            }
-            guard let image = UIImage(data: data) else { return nil }
-            cache.setObject(image, forKey: cacheKey)
-            return image
-        } catch {
-            print(error)
-            return nil
-        }
+    func getShowDetails(for movieId: Int, type: TMDBType) async throws -> ShowDetails {
+        let urlString = "\(baseURL)/\(type.rawValue)/\(movieId)?append_to_response=credits,videos,recommendations,images&language=en-US"
+        return try await request(with: urlString, model: ShowDetails.self)
     }
     
-    static func downloadImage(path: String) async -> UIImage? {
-        let urlString = "https://image.tmdb.org/t/p/w500/\(path)"
-        
-        guard let url = URL(string: urlString) else { return nil }
-       
-        do {
-            let (data, response) = try await URLSession.shared.data(from: url)
-            guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-                return nil
-            }
-            guard let image = UIImage(data: data) else { return nil }
-            return image
-        } catch {
-            print(error)
-            return nil
-        }
+    func getPersonDetails(for personId: Int) async throws -> Person {
+        let urlString = "\(baseURL)/person/\(personId)?append_to_response=images,combined_credits"
+        return try await request(with: urlString, model: Person.self)
     }
 }

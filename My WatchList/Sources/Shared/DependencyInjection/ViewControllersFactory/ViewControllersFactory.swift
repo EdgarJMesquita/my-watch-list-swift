@@ -9,7 +9,6 @@ import UIKit
 
 final class ViewControllersFactory: ViewControllersFactoryProtocol {
    
-    
     func makeSplashVC(flowDelegate: SplashFlowDelegate) -> SplashVC {
         let contentView = SplashView()
         let viewController = SplashVC(contentView: contentView, flowDelegate: flowDelegate)
@@ -21,9 +20,29 @@ final class ViewControllersFactory: ViewControllersFactoryProtocol {
         return tabBarVC
     }
     
-    func makeDetailsVC(flowDelegate: GoBackFlowDelegate, show: Show) -> DetailsVC {
-        let contentView = DetailsView()
-        let viewController = DetailsVC(contentView: contentView, show: show, flowDelegate: flowDelegate)
+    func makeDetailsVC(flowDelegate: ShowDetailsFlowDelegate, show: Show) -> ShowDetailsVC {
+        let contentView = ShowDetailsView()
+        let viewController = ShowDetailsVC(contentView: contentView, show: show, viewModel: ShowDetailsViewModel(), flowDelegate: flowDelegate)
         return viewController
+    }
+    
+    func makePersonDetailsVC(flowDelegate: PersonDetailsFlowDelegate, personId: Int) -> PersonDetailsVC {
+        let contentView = PersonDetailsView()
+        let viewController = PersonDetailsVC(
+            contentView: contentView,
+            personId: personId,
+            viewModel: PersonDetailsViewModel(),
+            flowDelegate: flowDelegate
+        )
+        return viewController
+    }
+    
+    func makeVideoPlayerVC(video: Video) -> VideoPlayerVC {
+        let viewController = VideoPlayerVC(video: video)
+        return viewController
+    }
+    
+    func makeFullScreenImageVC(imagePath: String) -> FullScreenImageViewVC {
+        FullScreenImageViewVC(imagePath: imagePath)
     }
 }

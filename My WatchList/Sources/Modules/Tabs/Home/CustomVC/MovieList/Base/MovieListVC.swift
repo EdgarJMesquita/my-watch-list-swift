@@ -46,7 +46,7 @@ class MovieListVC: UIViewController {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.itemSize = CGSize(width: 120, height: 193)
-        layout.sectionInset = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 12)
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 24, bottom: 0, right: 12)
         layout.minimumLineSpacing = 16
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
@@ -113,12 +113,12 @@ class MovieListVC: UIViewController {
 
 
 extension MovieListVC: UICollectionViewDataSource {
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        viewModel.shows.count
-    }
+//    func numberOfSections(in collectionView: UICollectionView) -> Int {
+//        viewModel.shows.count
+//    }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        1
+        viewModel.shows.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -126,8 +126,7 @@ extension MovieListVC: UICollectionViewDataSource {
             return UICollectionViewCell()
         }
         
-        cell.configure(with: viewModel.shows[indexPath.section])
-        cell.imageDownloaderDelegate = self
+        cell.configure(with: viewModel.shows[indexPath.item])
         
         return cell
     }
@@ -135,7 +134,7 @@ extension MovieListVC: UICollectionViewDataSource {
 
 extension MovieListVC: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let selectedShow = viewModel.shows[indexPath.section]
+        let selectedShow = viewModel.shows[indexPath.item]
         delegate?.movieDidTap(show: selectedShow)
     }
 }
@@ -145,11 +144,5 @@ extension MovieListVC: ShowViewModelDelegate {
         DispatchQueue.main.async { [weak self] in
             self?.collectionView.reloadData()
         }
-    }
-}
-
-extension MovieListVC: ImageDownloaderDelegate {
-    func downloadTraktImage(urlString: String) async -> UIImage? {
-        await viewModel.downloadImage(path: urlString)
     }
 }

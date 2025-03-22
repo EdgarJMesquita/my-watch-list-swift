@@ -5,4 +5,9 @@
 //  Created by Edgar Jonas Mesquita da Silva on 20/03/25.
 //
 
-import Foundation
+import UIKit
+
+protocol FullScreenImageDelegate: AnyObject {
+    func presentFullScreenImage(imagePath: String, with viewController: UIViewController)
+}
+

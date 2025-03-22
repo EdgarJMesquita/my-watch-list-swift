@@ -11,8 +11,8 @@ class HomeView: UIView {
 
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
-        
         scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.contentInsetAdjustmentBehavior = .never
         return scrollView
     }()
     
@@ -132,7 +132,6 @@ class HomeView: UIView {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-    
     
     override init(frame: CGRect) {
         super.init(frame: frame)

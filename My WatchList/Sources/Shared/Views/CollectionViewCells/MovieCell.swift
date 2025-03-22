@@ -16,6 +16,7 @@ class MovieCell: UICollectionViewCell {
         imageView.layer.cornerRadius = 8
         imageView.layer.masksToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.backgroundColor = .mwlGray
         return imageView
     }()
     
@@ -54,9 +55,14 @@ class MovieCell: UICollectionViewCell {
     func configure(with show: Show){
         titleLabel.text = show.getTitle()
          
-        if let path = show.posterPath {
-            Task {
-                imageView.image = await ImageService.shared.downloadTMDBImage(path: path)
+        Task {
+            if 
+                let path = show.posterPath,
+                let image = await ImageService.shared.downloadTMDBImage(path: path) 
+            {
+                imageView.image = image
+            } else {
+                imageView.image = UIImage(systemName: "photo.fill")
             }
         }
     }
@@ -66,7 +72,7 @@ class MovieCell: UICollectionViewCell {
             imageView.topAnchor.constraint(equalTo: contentView.topAnchor),
             imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            imageView.heightAnchor.constraint(equalToConstant: 160),
+            imageView.heightAnchor.constraint(equalToConstant: 170),
             
             titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             titleLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),

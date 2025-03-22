@@ -26,7 +26,7 @@ class MWLTabBarController: UITabBarController {
         tabBar.tintColor = .mwlPrimary
         tabBar.barStyle = .default
 
-        viewControllers = [createHomeNC()]
+        viewControllers = [createHomeNC(),createSearchNC()]
     }
 
     private func createHomeNC() -> UINavigationController {
@@ -35,7 +35,14 @@ class MWLTabBarController: UITabBarController {
         homeVC.tabBarItem = UITabBarItem(title: "Home", image: .mwlHome, tag: 0)
         setupTabBarItemStyle(to: homeVC)
         return UINavigationController(rootViewController: homeVC)
-
+    }
+    
+    private func createSearchNC() -> UINavigationController {
+        let homeVC = SearchVC(contentView: SearchView(),flowDelegate: flowDelegate)
+        homeVC.title = "Search"
+        homeVC.tabBarItem = UITabBarItem(title: "Home", image: .mwlSearch, tag: 0)
+        setupTabBarItemStyle(to: homeVC)
+        return UINavigationController(rootViewController: homeVC)
     }
 
     private func setupTabBarItemStyle(to viewController: UIViewController) {

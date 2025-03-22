@@ -20,7 +20,7 @@ class ShowViewModel {
     func loadData(type: TMDBType, category: TMDBCategory) async {
         Task {
             do {
-                shows = try await tmdbService.getData(type: type, category: category)
+                shows = try await tmdbService.getShows(type: type, category: category)
                 delegate?.showsDidUpdate()
             } catch {
                 print(error)
@@ -32,9 +32,6 @@ class ShowViewModel {
         }
     }
 
-    func downloadImage(path: String) async -> UIImage? {
-        return await tmdbService.downloadImage(path: path)
-    }
 }
 
 protocol ShowViewModelDelegate: AnyObject {

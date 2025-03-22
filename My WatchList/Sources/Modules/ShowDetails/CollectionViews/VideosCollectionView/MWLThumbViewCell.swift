@@ -41,7 +41,7 @@ class MWLThumbViewCell: UICollectionViewCell {
         nameLabel.text = video.name
         Task {
             if
-                let image = await ImageService.shared.downloadYoutubeThumbImage(videoId: video.key )
+                let image = await ImageService.shared.downloadThumbnail(for: video)
             {
                 avatarImageView.image = image
               
@@ -77,9 +77,9 @@ class MWLThumbViewCell: UICollectionViewCell {
 
 
 #Preview {
-    DetailsVC(
-        contentView: DetailsView(),
+    ShowDetailsVC(
+        contentView: ShowDetailsView(),
         show: Show.buildMock(),
-        viewModel: DetailsViewModel()
+        viewModel: ShowDetailsViewModel()
     )
 }

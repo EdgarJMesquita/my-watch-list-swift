@@ -18,4 +18,14 @@ extension UIView {
             bottomAnchor.constraint(equalTo: superview.bottomAnchor),
         ])
     }
+    
+    func addBlurEffect(){
+        let blurEffect = UIBlurEffect(style: .systemUltraThinMaterialDark)
+        let blurView = UIVisualEffectView(effect: blurEffect)
+        
+        blurView.frame = self.bounds
+        blurView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        
+        self.addSubview(blurView)
+    }
 }

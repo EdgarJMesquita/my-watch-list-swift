@@ -1,1 +1,50 @@
 Config.xcconfig
+
+# User-specific settings
+*.xcuserdata/
+*.xcscmblueprint
+*.xcworkspace/
+
+# Build artifacts
+DerivedData/
+build/
+*.o
+*.d
+*.bin
+*.pdb
+*.app
+*.ipa
+*.dSYM
+*.swiftpm/
+
+# CocoaPods dependencies (if using CocoaPods)
+Pods/
+Podfile.lock
+
+# Carthage dependencies (if using Carthage)
+Carthage/Build/
+
+# Swift Package Manager
+.swiftpm/xcode/
+Package.resolved
+
+# Xcode Cache and Logs
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+*.xcuserstate
+*.DS_Store
+
+# Certificates and Provisioning Profiles
+*.mobileprovision
+*.xcconfig
+*.p12
+
+# Fastlane (if using Fastlane)
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/
+fastlane/test_output/
+
+# Environment-specific files
+.env

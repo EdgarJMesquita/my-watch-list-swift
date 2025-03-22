@@ -11,4 +11,5 @@ enum MWLError: String, Error {
     case missingConfigFile = "Missing Client Id"
     case invalidURL = "URL Inválida"
     case invalidResponse = "Invalid response from server"
+    case invalidDate = "Invalid date"
 }
