@@ -6,20 +6,34 @@
 //
 
 import UIKit
+import Hero
 
 class PersonDetailsVC: UIViewController {
     private let contentView: PersonDetailsView
     private let personId: Int
+    private let profilePath: String?
     private let viewModel: PersonDetailsViewModel
     weak var flowDelegate: PersonDetailsFlowDelegate?
+    let previousIndex: Int
     
-    init(contentView: PersonDetailsView, personId: Int, viewModel: PersonDetailsViewModel, flowDelegate: PersonDetailsFlowDelegate? = nil) {
+    init(
+        contentView: PersonDetailsView,
+        personId: Int,
+        profilePath: String?,
+        viewModel: PersonDetailsViewModel,
+        flowDelegate: PersonDetailsFlowDelegate? = nil,
+        previousIndex: Int
+    ) {
         self.contentView = contentView
         self.viewModel = viewModel
         self.flowDelegate = flowDelegate
         self.personId = personId
+        self.previousIndex = previousIndex
+        self.profilePath = profilePath
         super.init(nibName: nil, bundle: nil)
         viewModel.delegate = self
+        setupHero()
+        setupBanner()
     }
     
     required init?(coder: NSCoder) {
@@ -30,37 +44,18 @@ class PersonDetailsVC: UIViewController {
         super.viewDidLoad()
         setup()
         loadData()
-        setupNavigationItem()
         bindDelegates()
-    }
-
-    private func setupNavigationItem(){
-        navigationController?.isNavigationBarHidden = true
-        
-//        let favoriteButton = UIBarButtonItem(
-//            image: UIImage(systemName: "star"),
-//            style: .done,
-//            target: self,
-//            action: #selector(dismissVC)
-//        )
-//        navigationItem.rightBarButtonItem = favoriteButton
-//        
-//        let closeButton = UIBarButtonItem(
-//            barButtonSystemItem: .close,
-//            target: self,
-//            action: #selector(dismissVC)
-//        )
-//        navigationItem.leftBarButtonItem = closeButton
-        
-    }
-    
-    @objc
-    private func dismissVC(){
-        dismiss(animated: true)
     }
     
     private func bindDelegates(){
         contentView.creditsCollectionView.customDelegate = self
+    }
+    
+    private func setupHero(){
+        if let path = profilePath {
+            self.hero.isEnabled = true
+            contentView.bannerImageView.hero.id = "\(previousIndex)\(path)"
+        }
     }
     
     private func setup() {
@@ -72,8 +67,8 @@ class PersonDetailsVC: UIViewController {
     private func setupBanner(){
         Task {
             if
-                let posterPath = viewModel.person?.profilePath,
-                let image = await ImageService.shared.downloadTMDBImage(path: posterPath)
+                let profilePath = profilePath,
+                let image = await ImageService.shared.downloadTMDBImage(path: profilePath)
             {
                 contentView.bannerImageView.image = image
             } else {
@@ -87,10 +82,11 @@ class PersonDetailsVC: UIViewController {
     }
     
     private func setupUI(){
+        // TODO: Refactor
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
             
-            setupBanner()
+            navigationItem.backButtonTitle = viewModel.person?.name
             contentView.titleLabel.text = viewModel.person?.name
             contentView.overviewLabel.text = viewModel.person?.biography
             
@@ -138,18 +134,19 @@ class PersonDetailsVC: UIViewController {
         alert.addAction(UIAlertAction(title: "Ok", style: .default))
         present(alert, animated: true)
     }
+    
 }
 
 
-extension PersonDetailsVC: PersonDetailsViewModelDelegate {
+extension PersonDetailsVC: PersonDetailsViewModelDelegate {    
     func detailsDidLoad() {
         setupUI()
     }
 }
 
 extension PersonDetailsVC: MWLCredtisCollectionViewDelegate {
-    func didTapShow(show: Show) {
-        flowDelegate?.presentShowDetailsDetails(show: show, with: self)
+    func didTapShow(show: Media) {
+        flowDelegate?.presentShowDetails(id: show.id, posterPath: show.posterPath, type: show.getType())
     }
 }
 
@@ -161,8 +158,10 @@ extension PersonDetailsVC: MWLImagesCollectionViewDelegate {
 
 #Preview {
     PersonDetailsVC(
-        contentView: PersonDetailsView(),
+        contentView: PersonDetailsView(previousIndex: 1),
         personId: 1356210,
-        viewModel: PersonDetailsViewModel()
+        profilePath: nil,
+        viewModel: PersonDetailsViewModel(),
+        previousIndex: 1
     )
 }

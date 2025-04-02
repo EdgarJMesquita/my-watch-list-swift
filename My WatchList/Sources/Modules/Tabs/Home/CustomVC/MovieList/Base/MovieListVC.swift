@@ -11,6 +11,7 @@ class MovieListVC: UIViewController {
     
     let viewModel: ShowViewModel
     weak var delegate: MovieListDelegate?
+    let currentIndex: Int
 
     func getTitle() -> String {
         fatalError("getTitle() -> String has not been implemented")
@@ -54,16 +55,18 @@ class MovieListVC: UIViewController {
         collectionView.dataSource = self
 
         collectionView.delegate = self
-        collectionView.register(MovieCell.self, forCellWithReuseIdentifier: MovieCell.identifier)
+        collectionView.register(ShowCollectionViewCell.self, forCellWithReuseIdentifier: ShowCollectionViewCell.identifier)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         return collectionView
     }()
     
-    init(viewModel: ShowViewModel, delegate: MovieListDelegate? = nil) {
+    init(viewModel: ShowViewModel, delegate: MovieListDelegate? = nil, currentIndex: Int) {
         self.viewModel = viewModel
         self.delegate = delegate
+        self.currentIndex = currentIndex
         super.init(nibName: nil, bundle: nil)
         viewModel.delegate = self
+        
     }
     
     required init?(coder: NSCoder) {
@@ -74,11 +77,15 @@ class MovieListVC: UIViewController {
         super.viewDidLoad()
         setupUI()
         loadMovies()
+     
     }
     
     private func loadMovies(){
+        let type = getTraktType()
+        let category = getTraktCategory()
+        
         Task {
-            await viewModel.loadData(type: getTraktType(),category:getTraktCategory())
+            await viewModel.loadData(type: type, category: category)
         }
     }
     
@@ -113,20 +120,17 @@ class MovieListVC: UIViewController {
 
 
 extension MovieListVC: UICollectionViewDataSource {
-//    func numberOfSections(in collectionView: UICollectionView) -> Int {
-//        viewModel.shows.count
-//    }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         viewModel.shows.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCell.identifier, for: indexPath) as? MovieCell else {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ShowCollectionViewCell.identifier, for: indexPath) as? ShowCollectionViewCell else {
             return UICollectionViewCell()
         }
         
-        cell.configure(with: viewModel.shows[indexPath.item])
+        cell.configure(with: viewModel.shows[indexPath.item], currentIndex: currentIndex)
         
         return cell
     }

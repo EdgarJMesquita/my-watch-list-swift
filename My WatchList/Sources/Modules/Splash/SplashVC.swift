@@ -27,7 +27,7 @@ class SplashVC: UIViewController {
     }
 
     private func setup() {
-        view.backgroundColor = .mwlBackground
+        view.backgroundColor = .mwlSurface
         view.addSubview(contentView)
         setupContentViewToBounds(contentView: contentView)
         startBreathing()

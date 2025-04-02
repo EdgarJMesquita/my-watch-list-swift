@@ -8,6 +8,7 @@
 import UIKit
 
 class ShowDetailsView: UIView {
+    private let previousIndex: Int
     
     lazy var activityIndicator: UIActivityIndicatorView = {
         let activityIndicator = UIActivityIndicatorView(style: .large)
@@ -17,10 +18,10 @@ class ShowDetailsView: UIView {
         return activityIndicator
     }()
     
-    
     lazy var bannerImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.addFadingFooter()
         return imageView
     }()
     
@@ -36,7 +37,7 @@ class ShowDetailsView: UIView {
         return view
     }()
     
-    private lazy var wishListButton: UIButton = {
+    lazy var wishListButton: UIButton = {
         let button = UIButton()
         
         button.setTitle("Wishlist", for: .normal)
@@ -45,9 +46,7 @@ class ShowDetailsView: UIView {
         button.titleLabel?.font =  UIFont.systemFont(ofSize: 16, weight: .semibold)
         button.layer.cornerRadius = 8
         button.layer.masksToBounds = true
-        button.setImage(UIImage(systemName: "plus"), for: .normal)
-        button.imageView?.tintColor = .white
-        button.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 12)
+        button.alpha = 0
         button.translatesAutoresizingMaskIntoConstraints = false
         
         return button
@@ -118,6 +117,15 @@ class ShowDetailsView: UIView {
         return label
     }()
     
+    lazy var voteCountLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 0
+        label.textColor = .mwlGray
+        label.font = UIFont.systemFont(ofSize: 16, weight: .regular)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     private lazy var castLabel: UILabel = {
         let label = UILabel()
         label.text = "Cast"
@@ -129,7 +137,7 @@ class ShowDetailsView: UIView {
     
     
     lazy var castCollectionView: MWLCastCollectionView = {
-        MWLCastCollectionView()
+        MWLCastCollectionView(currentIndex: previousIndex + 1)
     }()
     
     lazy var producersLabel: UILabel = {
@@ -184,11 +192,12 @@ class ShowDetailsView: UIView {
     }()
     
     lazy var recommendationsCollectionView: MWLCreditsCollectionView = {
-        let collectionView = MWLCreditsCollectionView()
+        let collectionView = MWLCreditsCollectionView(currentIndex: previousIndex + 1)
         return collectionView
     }()
 
-    init() {
+    init(previousIndex: Int) {
+        self.previousIndex = previousIndex
         super.init(frame: .zero)
         setupUI()
         setupLoading()
@@ -216,25 +225,28 @@ class ShowDetailsView: UIView {
         scrollView.addSubview(contentView)
         addSubview(scrollView)
         
-        contentView.addSubview(bannerImageView)
-        contentView.addSubview(wishListButton)
-        contentView.addSubview(titleLabel)
-        contentView.addSubview(overviewLabel)
-        contentView.addSubview(detailsLabel)
-        contentView.addSubview(genresLabel)
-        contentView.addSubview(durationLabel)
-        contentView.addSubview(spokenLanguageLabel)
-        contentView.addSubview(countryLabel)
-        contentView.addSubview(castLabel)
-        contentView.addSubview(castCollectionView)
-        contentView.addSubview(producersLabel)
-        contentView.addSubview(producersCollectionView)
-        contentView.addSubview(videosLabel)
-        contentView.addSubview(videosCollectionView)
-        contentView.addSubview(imagesLabel)
-        contentView.addSubview(imagesCollectionView)
-        contentView.addSubview(recommendationsLabel)
-        contentView.addSubview(recommendationsCollectionView)
+        contentView.addSubviews(
+            bannerImageView,
+            wishListButton,
+            titleLabel,
+            overviewLabel,
+            detailsLabel,
+            genresLabel,
+            voteCountLabel,
+            durationLabel,
+            spokenLanguageLabel,
+            countryLabel,
+            castLabel,
+            castCollectionView,
+            producersLabel,
+            producersCollectionView,
+            videosLabel,
+            videosCollectionView,
+            imagesLabel,
+            imagesCollectionView,
+            recommendationsLabel,
+            recommendationsCollectionView
+        )
     }
     
     private func setupConstraints(){
@@ -249,6 +261,7 @@ class ShowDetailsView: UIView {
             titleLabel,
             overviewLabel, 
             detailsLabel,
+            voteCountLabel,
             genresLabel,
             countryLabel,
             castLabel,
@@ -284,9 +297,9 @@ class ShowDetailsView: UIView {
             
             detailsLabel.topAnchor.constraint(equalTo: overviewLabel.bottomAnchor, constant: padding),
 
+            voteCountLabel.topAnchor.constraint(equalTo: detailsLabel.bottomAnchor, constant: padding / 2),
             
-            genresLabel.topAnchor.constraint(equalTo: detailsLabel.bottomAnchor, constant: padding / 2),
-
+            genresLabel.topAnchor.constraint(equalTo: voteCountLabel.bottomAnchor, constant: padding / 2),
             
             countryLabel.topAnchor.constraint(equalTo: genresLabel.bottomAnchor, constant: padding / 2),
             
@@ -299,7 +312,7 @@ class ShowDetailsView: UIView {
             castCollectionView.topAnchor.constraint(equalTo: castLabel.bottomAnchor, constant: padding / 2),
             castCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             castCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            castCollectionView.heightAnchor.constraint(equalToConstant: 120),
+            castCollectionView.heightAnchor.constraint(equalToConstant: 130),
             
             
             producersLabel.topAnchor.constraint(equalTo: castCollectionView.bottomAnchor, constant: padding),
@@ -341,8 +354,11 @@ class ShowDetailsView: UIView {
 
 #Preview {
     ShowDetailsVC(
-        contentView: ShowDetailsView(),
-        show: Show.buildMock(),
-        viewModel: ShowDetailsViewModel()
+        contentView: ShowDetailsView(previousIndex: 1),
+        id: 1126166,
+        posterPath: "/gFFqWsjLjRfipKzlzaYPD097FNC.jpg",
+        type: .movie,
+        viewModel: ShowDetailsViewModel(),
+        previousIndex: 1
     )
 }

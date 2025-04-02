@@ -9,46 +9,18 @@ import UIKit
 
 class BannerVC: UIViewController {
     
-    let viewModel: ShowViewModel
+    
+    let viewModel: BannerViewModel
+    weak var delegate: BannerDelegate?
+    let currentIndex: Int
+    
     
     lazy var bannerImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
-
-    lazy var filter: MWLSegmentedFilter = {
-        let filter = MWLSegmentedFilter()
-        filter.translatesAutoresizingMaskIntoConstraints = false
-        return filter
-    }()
-
-    private lazy var stackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .horizontal
-        stackView.spacing = 20
-        stackView.distribution = .equalCentering
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        return stackView
-    }()
     
-    private lazy var myListLabel: UILabel = {
-        let label = UILabel()
-        label.text = "My list"
-        label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        label.textColor = .mwlTitle
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-
-    private lazy var exploreLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Explore"
-        label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        label.textColor = .mwlTitle
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
 
     private lazy var stackButton: UIStackView = {
         let stackView = UIStackView()
@@ -56,8 +28,11 @@ class BannerVC: UIViewController {
         stackView.spacing = 16
         stackView.distribution = .fillEqually
         stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.layoutMargins = UIEdgeInsets(top: 0, left: 24, bottom: 0, right: 24)
+        stackView.isLayoutMarginsRelativeArrangement = true
         return stackView
     }()
+    
     
     private lazy var wishListButton: UIButton = {
         let button = UIButton()
@@ -68,43 +43,55 @@ class BannerVC: UIViewController {
         button.titleLabel?.font =  UIFont.systemFont(ofSize: 16, weight: .semibold)
         button.layer.cornerRadius = 8
         button.layer.masksToBounds = true
-        button.setImage(UIImage(systemName: "plus"), for: .normal)
-        button.imageView?.tintColor = .white
-        button.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 12)
         button.translatesAutoresizingMaskIntoConstraints = false
         
         return button
     }()
+    
     
     private lazy var detailsButton: UIButton = {
         let button = UIButton()
         
         button.setTitle("Details", for: .normal)
-        button.setTitleColor(.mwlTitle, for: .normal)
+        button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .mwlPrimary
         button.titleLabel?.font =  UIFont.systemFont(ofSize: 16, weight: .semibold)
         button.layer.cornerRadius = 8
         button.layer.masksToBounds = true
         button.translatesAutoresizingMaskIntoConstraints = false
-        
+        button.addTarget(self, action: #selector(didTapDetails), for: .touchUpInside)
         return button
     }()
     
     
-    init(viewModel: ShowViewModel) {
+    init(viewModel: BannerViewModel, currentIndex: Int, delegate: BannerDelegate? = nil) {
         self.viewModel = viewModel
+        self.delegate = delegate
+        self.currentIndex = currentIndex
         super.init(nibName: nil, bundle: nil)
         viewModel.delegate = self
     }
+    
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    
+    @objc
+    private func didTapDetails(){
+        guard let show = viewModel.details else {
+            return
+        }
+        delegate?.movieDidTap(show: show)
+    }
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
     }
+    
     
     private func loadMovies() {
         Task {
@@ -112,30 +99,29 @@ class BannerVC: UIViewController {
         }
     }
     
+    
     private func setupBanner() async {
-        guard let path = viewModel.shows.first?.posterPath else {
+        guard let path = viewModel.details?.posterPath else {
             return
         }
  
         let image = await ImageService.shared.downloadTMDBImage(path: path)
         bannerImageView.image = image
+        bannerImageView.hero.id = "\(currentIndex)\(path)"
         bannerImageView.addFadingFooter()
     }
+    
     
     private func setupUI() {
         setupHierarchy()
         setupConstraints()
         loadMovies()
+        configureWatchListButtonAction()
     }
-
+    
+    
     private func setupHierarchy() {
         view.addSubview(bannerImageView)
-//        view.addSubview(filter)
-        
-        stackView.addArrangedSubview(myListLabel)
-        stackView.addArrangedSubview(exploreLabel)
-        view.addSubview(stackView)
-
         stackButton.addArrangedSubview(wishListButton)
         stackButton.addArrangedSubview(detailsButton)
         view.addSubview(stackButton)
@@ -156,27 +142,52 @@ class BannerVC: UIViewController {
             bannerImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             bannerImageView.heightAnchor.constraint(equalToConstant: bannerHeight),
 
-//            filter.topAnchor.constraint(equalTo: view.topAnchor, constant: 40),
-//            filter.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-//            filter.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-//            filter.heightAnchor.constraint(equalToConstant: 47),
-            
-            stackView.topAnchor.constraint(equalTo: bannerImageView.bottomAnchor,constant: -50),
-            stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            
-            stackButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),
-            stackButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding),
+            stackButton.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            stackButton.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             stackButton.heightAnchor.constraint(equalToConstant: stackButtonHeight),
-            stackButton.topAnchor.constraint(equalTo: stackView.bottomAnchor,constant: padding),
-            
+            stackButton.bottomAnchor.constraint(equalTo: bannerImageView.bottomAnchor, constant: -24),
         ])
     }
+    
+    
+    private func configureWatchListButtonAction(){
+        wishListButton.addTarget(
+            self,
+            action: #selector(didTapWatchList),
+            for: .touchUpInside
+        )
+    }
+    
+
+    @objc
+    private func didTapWatchList(){
+        if PersistenceManager.getSessionId() == nil {
+            let viewController = MWLLoginViewVC()
+            present(viewController, animated: true)
+        } else {
+            viewModel.toogleWatchList()
+        }
+    }
+    
+    
+    private func setupWatchListButton(isWatchList: Bool){
+        let buttonTitle = isWatchList ? "- WatchList" : "+ WatchList"
+        DispatchQueue.main.async { [weak self] in
+            self?.wishListButton.setTitle(buttonTitle, for: .normal)
+        }
+    }
+    
 }
 
-extension BannerVC: ShowViewModelDelegate {
-    func showsDidUpdate() {
+extension BannerVC: BannerViewModelDelegate {
+    func isWatchListDidLoad(isWatchList: Bool) {
+        setupWatchListButton(isWatchList: isWatchList)
+    }
+    
+    func didLoadDetails() {
         Task {
             await setupBanner()
         }
+        delegate?.didFinishLoading()
     }
 }

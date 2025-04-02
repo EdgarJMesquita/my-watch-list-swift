@@ -23,5 +23,5 @@ class PopularMoviesListVC: MovieListVC {
 
 
 #Preview {
-    PopularShowsListVC(viewModel: ShowViewModel())
+    PopularShowsListVC(viewModel: ShowViewModel(), currentIndex: 1)
 }

@@ -8,6 +8,8 @@
 import Foundation
 
 
-protocol TabBarFlowDelegate: AnyObject{
-    func navigateToDetails(show: Show)
+protocol TabBarFlowDelegate: AnyObject, PresentShowDetailsProtocol, PresentPersonDetailsProtocol {
+    func navigateToTabBarHome()
+    func navigateToTabBarSearch()
+    func navigateToTabBarProfile()
 }

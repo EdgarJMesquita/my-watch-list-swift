@@ -50,5 +50,27 @@ extension UIImageView {
 
         layer.addSublayer(gradientLayer)
     }
+    
+    func addDarkerOnTopRightEdge() {
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = CGRect(x: 0, y: 0, width: frame.width, height: frame.height)
 
+      
+        gradientLayer.colors = [
+            UIColor.clear.cgColor,
+            UIColor.black.withAlphaComponent(0.1).cgColor,
+            UIColor.black.withAlphaComponent(0.2).cgColor,
+            UIColor.black.withAlphaComponent(0.4).cgColor,
+
+        ]
+
+        gradientLayer.locations = [0.0,0.7, 0.8, 1.0]
+
+ 
+        gradientLayer.startPoint = CGPoint(x: 0.5, y: 1.0)
+        gradientLayer.endPoint = CGPoint(x: 1.0, y: 0.0)
+
+        layer.addSublayer(gradientLayer)
+   
+    }
 }

@@ -35,17 +35,29 @@ struct Person: Codable {
         case images
         case combinedCredits = "combined_credits"
     }
+    
+    func getFavorite() -> Favorite {
+        Favorite(
+            id: id,
+            title: name,
+            mediaType: .person,
+            voteCount: nil,
+            imagePath: profilePath,
+            description: biography
+        )
+    }
 }
 
 // MARK: - CombinedCredits
 struct CombinedCredits: Codable {
-    let cast: [Show]?
+    let cast: [Media]?
     let crew: [Crew]?
 }
 
 enum MediaType: String, Codable {
     case movie = "movie"
     case tv = "tv"
+    case person = "person"
 }
 
 struct PersonCast: Codable {

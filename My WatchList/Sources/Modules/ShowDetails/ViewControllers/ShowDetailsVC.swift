@@ -6,21 +6,45 @@
 //
 
 import UIKit
+import Hero
 
 class ShowDetailsVC: UIViewController {
     private let contentView: ShowDetailsView
-    private let show: Show
+    private let id: Int
+    private let posterPath: String?
+    private let type: TMDBType
     private let viewModel: ShowDetailsViewModel
     weak var flowDelegate: ShowDetailsFlowDelegate?
+    let previousIndex: Int
     
-    init(contentView: ShowDetailsView, show: Show, viewModel: ShowDetailsViewModel, flowDelegate: ShowDetailsFlowDelegate? = nil) {
-        self.show = show
+    init(
+        contentView: ShowDetailsView,
+        id: Int,
+        posterPath: String?,
+        type: TMDBType,
+        viewModel: ShowDetailsViewModel,
+        flowDelegate: ShowDetailsFlowDelegate? = nil,
+        previousIndex: Int
+    ) {
+      
         self.contentView = contentView
         self.viewModel = viewModel
         self.flowDelegate = flowDelegate
+        self.previousIndex = previousIndex
+        self.id = id
+        self.posterPath = posterPath
+        self.type = type
         super.init(nibName: nil, bundle: nil)
         viewModel.delegate = self
         contentView.castCollectionView.customDelegate = self
+        
+        self.hero.isEnabled = true
+        
+        if let posterPath = posterPath {
+            self.contentView.bannerImageView.hero.id = "\(previousIndex)\(posterPath)"
+        }
+      
+        setupBanner()
     }
     
     required init?(coder: NSCoder) {
@@ -31,51 +55,27 @@ class ShowDetailsVC: UIViewController {
         super.viewDidLoad()
         setup()
         loadData()
-        setupNavigationItem()
-     
     }
     
-    private func setupNavigationItem(){
-        navigationController?.isNavigationBarHidden = true
-        
-//        let favoriteButton = UIBarButtonItem(
-//            image: UIImage(systemName: "star"),
-//            style: .done,
-//            target: self,
-//            action: #selector(dismissVC)
-//        )
-//        navigationItem.rightBarButtonItem = favoriteButton
-//        
-//        let closeButton = UIBarButtonItem(
-//            barButtonSystemItem: .close,
-//            target: self,
-//            action: #selector(dismissVC)
-//        )
-//        
-//        navigationItem.leftBarButtonItem = closeButton
-        
-    }
-    
-    @objc
-    private func dismissVC(){
-        dismiss(animated: true)
+    private func setupNavigationItem(title: String){
+        navigationItem.backButtonTitle = title
     }
     
     private func setup() {
         view.backgroundColor = .mwlBackground
         view.addSubview(contentView)
         setupContentViewToBounds(contentView: contentView, safe: false)
+        configureWatchListButtonAction()
     }
     
     private func setupBanner(){
         Task {
             guard
-                let posterPath = show.posterPath,
+                let posterPath = posterPath,
                 let image = await ImageService.shared.downloadTMDBImage(path: posterPath)
             else {
                 return
             }
-            
             contentView.bannerImageView.image = image
             contentView.bannerImageView.addFadingFooter()
             
@@ -83,14 +83,67 @@ class ShowDetailsVC: UIViewController {
     }
     
     private func loadData(){
-        setupBanner()
-        viewModel.loadData(for: show)
+        viewModel.loadData(id: id, type: type)
+    }
+    
+    private func setupFavorite(isFavorite: Bool){
+        let imageIcon = isFavorite ? UIImage(systemName: "heart.fill") : UIImage(systemName: "heart")
+        
+        
+        let favoriteButton = UIBarButtonItem(image: imageIcon, style: .plain, target: self, action: #selector(didTapFavorite))
+
+        favoriteButton.tintColor = .red
+        
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            navigationItem.rightBarButtonItem = favoriteButton
+        }
+        
+    }
+    
+    @objc
+    private func didTapFavorite(){
+        viewModel.toogleFavorite()
+    }
+    
+    private func configureWatchListButtonAction(){
+        contentView.wishListButton.addTarget(
+            self,
+            action: #selector(didTapWatchList),
+            for: .touchUpInside
+        )
+    }
+    
+    private func setupWatchListButton(isWatchList: Bool){
+        let buttonTitle = isWatchList ? "- WatchList" : "+ WatchList"
+        DispatchQueue.main.async { [weak self] in
+            UIView.animate(withDuration: 1){ [weak self] in
+                self?.contentView.wishListButton.alpha = 1
+            }
+            self?.contentView.wishListButton.setTitle(buttonTitle, for: .normal)
+        }
+    }
+    
+    @objc
+    private func didTapWatchList(){
+        if PersistenceManager.getSessionId() == nil {
+            let viewController = MWLLoginViewVC()
+            present(viewController, animated: true)
+        } else {
+            viewModel.toogleWatchList()
+        }
     }
     
     private func setupDetails(){
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
-            setupTexts()
+            setupTitle()
+            setupOverview()
+            setupVoteCount()
+            setupGenres()
+            setupCountries()
+            setupDuration()
+            setupSpokenLanguages()
             setupCast()
             setupProducers()
             setupImages()
@@ -100,40 +153,17 @@ class ShowDetailsVC: UIViewController {
         }
     }
     
-    private func setupTexts(){
+    private func setupTitle(){
         let title = viewModel.details?.getTitle() ?? "Unknown"
         let year = viewModel.details?.releaseDate?.dateFormat(.dateTime.year()) ?? "Unknown"
         contentView.titleLabel.text = "\(title) (\(year))"
         contentView.overviewLabel.text = viewModel.details?.overview
-        
-        let genresString = viewModel.details?.genres.map { $0.name }.joined(separator: ", ")
-        contentView.genresLabel.text = "Genre: \(genresString ?? "")"
-        
-        let countryString = viewModel.details?.originCountry.joined(separator: ", ")
-        contentView.countryLabel.text = "Country: \(countryString ?? "")"
-        
-        if let durationInMinutes = viewModel.details?.runtime {
-            let hours = durationInMinutes / 60
-            let minutes = durationInMinutes % 60
-        
-            var runtime = "Duration: "
-            
-            if(hours > 0){
-                runtime += "\(hours)h "
-            }
-            if(minutes > 0){
-                runtime += "\(minutes)m "
-            }
-            
-            contentView.durationLabel.text = runtime
-        }
-        
-        if let spokenLanguages = viewModel.details?.spokenLanguages {
-            contentView.spokenLanguageLabel.text = "Languages: " + spokenLanguages.map {
-                $0.englishName
-            }.joined(separator: ", ")
-        }
-        
+        setupNavigationItem(title: title)
+    }
+    
+    private func setupOverview(){
+        contentView.overviewLabel.text = viewModel.details?.overview
+
         if contentView.overviewLabel.isTruncated() {
             contentView.overviewLabel.isUserInteractionEnabled = true
             let tapRecognizer = UITapGestureRecognizer(
@@ -144,6 +174,55 @@ class ShowDetailsVC: UIViewController {
         }
         
     }
+    
+    private func setupGenres(){
+        let genresString = viewModel.details?.genres.map { $0.name }.joined(separator: ", ")
+        contentView.genresLabel.text = "Genre: \(genresString ?? "")"
+    }
+    
+    private func setupVoteCount(){
+        guard let voteCount = viewModel.details?.voteCount.formatBigNumbers() else {
+            return
+        }
+        contentView.voteCountLabel.text = "Votes: \(voteCount)"
+    }
+    
+    private func setupCountries(){
+        let countryString = viewModel.details?.originCountry.joined(separator: ", ")
+        contentView.countryLabel.text = "Country: \(countryString ?? "")"
+    }
+    
+    private func setupDuration(){
+        guard let durationInMinutes = viewModel.details?.runtime else {
+            contentView.durationLabel.text = "Duration: Unknown"
+            return
+        }
+        let hours = durationInMinutes / 60
+        let minutes = durationInMinutes % 60
+    
+        var runtime = "Duration: "
+        
+        if(hours > 0){
+            runtime += "\(hours)h "
+        }
+        if(minutes > 0){
+            runtime += "\(minutes)m "
+        }
+        
+        contentView.durationLabel.text = runtime
+    }
+    
+    private func setupSpokenLanguages(){
+        guard let spokenLanguages = viewModel.details?.spokenLanguages else {
+            contentView.spokenLanguageLabel.text = "Languages: Unknown"
+            return
+        }
+    
+        let spokenLanguageText = spokenLanguages.map { $0.englishName }.joined(separator: ", ")
+        
+        contentView.spokenLanguageLabel.text = "Languages: \(spokenLanguageText) "
+    }
+    
     
     private func setupCast(){
         guard 
@@ -159,7 +238,7 @@ class ShowDetailsVC: UIViewController {
     
     private func setupVideos(){
         guard 
-            let videos = viewModel.details?.videos.results,
+            let videos = viewModel.details?.videos?.results,
             videos.count > 0
         else {
             contentView.videosCollectionView.showEmptyMessage()
@@ -218,14 +297,22 @@ class ShowDetailsVC: UIViewController {
 }
 
 extension ShowDetailsVC: DetailsViewModelDelegate {
+    func isWatchListDidLoad(isWatchList: Bool) {
+        setupWatchListButton(isWatchList: isWatchList)
+    }
+    
+    func isFavoriteDidLoad(isFavorite: Bool) {
+        setupFavorite(isFavorite: isFavorite)
+    }
+    
     func detailsDidLoad() {
         setupDetails()
     }
 }
 
 extension ShowDetailsVC: MWLCastCollectionViewDelegate {
-    func didSelectCast(personId: Int) {
-        flowDelegate?.presentPersonDetails(for: personId, with: self)
+    func didSelectCast(personId: Int, profilePath: String?) {
+        flowDelegate?.presentPersonDetails(for: personId, profilePath: profilePath)
     }
 }
 
@@ -242,15 +329,18 @@ extension ShowDetailsVC: MWLImagesCollectionViewDelegate {
 }
 
 extension ShowDetailsVC: MWLCredtisCollectionViewDelegate {
-    func didTapShow(show: Show) {
-        flowDelegate?.presentShowDetailsDetails(show: show, with: self)
+    func didTapShow(show: Media) {
+        flowDelegate?.presentShowDetails(id: show.id, posterPath: show.posterPath, type: show.getType())
     }
 }
 
 #Preview {
     ShowDetailsVC(
-        contentView: ShowDetailsView(), 
-        show: Show.buildMock(),
-        viewModel: ShowDetailsViewModel()
+        contentView: ShowDetailsView(previousIndex: 1),
+        id: 1126166,
+        posterPath: "/gFFqWsjLjRfipKzlzaYPD097FNC.jpg",
+        type: .movie,
+        viewModel: ShowDetailsViewModel(),
+        previousIndex: 1
     )
 }

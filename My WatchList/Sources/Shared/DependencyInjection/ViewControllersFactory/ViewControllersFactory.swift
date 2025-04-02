@@ -8,6 +8,7 @@
 import UIKit
 
 final class ViewControllersFactory: ViewControllersFactoryProtocol {
+
    
     func makeSplashVC(flowDelegate: SplashFlowDelegate) -> SplashVC {
         let contentView = SplashView()
@@ -15,24 +16,40 @@ final class ViewControllersFactory: ViewControllersFactoryProtocol {
         return viewController
     }
     
-    func makeTabBarVC(flowDelegate: TabBarFlowDelegate) -> MWLTabBarController {
-        let tabBarVC = MWLTabBarController(flowDelegate: flowDelegate)
+    func makeTabBarVC(flowDelegate: TabBarFlowDelegate, previousIndex: Int) -> MWLTabBarController {
+        let tabBarVC = MWLTabBarController(flowDelegate: flowDelegate, previousIndex: previousIndex)
         return tabBarVC
     }
     
-    func makeDetailsVC(flowDelegate: ShowDetailsFlowDelegate, show: Show) -> ShowDetailsVC {
-        let contentView = ShowDetailsView()
-        let viewController = ShowDetailsVC(contentView: contentView, show: show, viewModel: ShowDetailsViewModel(), flowDelegate: flowDelegate)
+    func makeDetailsVC(
+        flowDelegate: ShowDetailsFlowDelegate,
+        id: Int,
+        posterPath: String?,
+        type: TMDBType,
+        previousIndex: Int
+    ) -> ShowDetailsVC {
+        let contentView = ShowDetailsView(previousIndex: previousIndex)
+        let viewController = ShowDetailsVC(
+            contentView: contentView,
+            id: id,
+            posterPath: posterPath,
+            type: type,
+            viewModel: ShowDetailsViewModel(),
+            flowDelegate: flowDelegate,
+            previousIndex: previousIndex
+        )
         return viewController
     }
     
-    func makePersonDetailsVC(flowDelegate: PersonDetailsFlowDelegate, personId: Int) -> PersonDetailsVC {
-        let contentView = PersonDetailsView()
+    func makePersonDetailsVC(flowDelegate: PersonDetailsFlowDelegate, personId: Int,profilePath: String?, previousIndex: Int) -> PersonDetailsVC {
+        let contentView = PersonDetailsView(previousIndex: previousIndex)
         let viewController = PersonDetailsVC(
             contentView: contentView,
             personId: personId,
+            profilePath: profilePath,
             viewModel: PersonDetailsViewModel(),
-            flowDelegate: flowDelegate
+            flowDelegate: flowDelegate,
+            previousIndex: previousIndex
         )
         return viewController
     }
@@ -45,4 +62,10 @@ final class ViewControllersFactory: ViewControllersFactoryProtocol {
     func makeFullScreenImageVC(imagePath: String) -> FullScreenImageViewVC {
         FullScreenImageViewVC(imagePath: imagePath)
     }
+    
+    func makeSuccessLoginVC(username: String) -> MWLSuccessLoginVC {
+        let viewController = MWLSuccessLoginVC(userName: username)
+        return viewController
+    }
+    
 }

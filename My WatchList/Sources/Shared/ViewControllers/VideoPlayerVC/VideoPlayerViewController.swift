@@ -91,6 +91,7 @@ class VideoPlayerVC: UIViewController {
             target: self,
             action: #selector(dismissVC)
         )
+        closeButton.tintColor = .mwlPrimary
         navigationItem.leftBarButtonItem = closeButton
         
     }

@@ -28,4 +28,19 @@ extension UIView {
         
         self.addSubview(blurView)
     }
+    
+    
+    func addBlurEffect(_ style: UIBlurEffect.Style){
+        let blurEffect = UIBlurEffect(style: style)
+        let blurView = UIVisualEffectView(effect: blurEffect)
+        
+        blurView.frame = self.bounds
+        blurView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        
+        self.addSubview(blurView)
+    }
+    
+    func addSubviews(_ views: UIView...){
+        for view in views { addSubview(view) }
+    }
 }
