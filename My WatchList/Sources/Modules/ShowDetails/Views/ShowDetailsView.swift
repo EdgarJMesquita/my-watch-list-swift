@@ -37,6 +37,17 @@ class ShowDetailsView: UIView {
         return view
     }()
     
+    private lazy var stackButton: UIStackView = {
+        let stack = UIStackView()
+        stack.spacing = 8
+        stack.axis = .horizontal
+        stack.distribution = .fillEqually
+        stack.layoutMargins = UIEdgeInsets(top: 0, left: 24, bottom: 0, right: 24)
+        stack.isLayoutMarginsRelativeArrangement = true
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        return stack
+    }()
+    
     lazy var wishListButton: UIButton = {
         let button = UIButton()
         
@@ -46,9 +57,14 @@ class ShowDetailsView: UIView {
         button.titleLabel?.font =  UIFont.systemFont(ofSize: 16, weight: .semibold)
         button.layer.cornerRadius = 8
         button.layer.masksToBounds = true
-        button.alpha = 0
         button.translatesAutoresizingMaskIntoConstraints = false
         
+        return button
+    }()
+    
+    lazy var rateButton: MWLButton = {
+        let button = MWLButton(title: "Gibe a rate", backgroundColor: .mwlPrimary)
+        button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
@@ -225,9 +241,13 @@ class ShowDetailsView: UIView {
         scrollView.addSubview(contentView)
         addSubview(scrollView)
         
+        stackButton.addArrangedSubview(wishListButton)
+        stackButton.addArrangedSubview(rateButton)
+        
         contentView.addSubviews(
             bannerImageView,
-            wishListButton,
+//            wishListButton,
+            stackButton,
             titleLabel,
             overviewLabel,
             detailsLabel,
@@ -257,7 +277,7 @@ class ShowDetailsView: UIView {
         contentView.pinToEdges(of: scrollView)
         
         [
-            wishListButton,
+//            wishListButton,
             titleLabel,
             overviewLabel, 
             detailsLabel,
@@ -287,8 +307,12 @@ class ShowDetailsView: UIView {
             bannerImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             bannerImageView.heightAnchor.constraint(equalToConstant: 430),
             
-            wishListButton.topAnchor.constraint(equalTo: bannerImageView.bottomAnchor, constant: -50),
-            wishListButton.heightAnchor.constraint(equalToConstant: 48),
+            
+            
+            stackButton.topAnchor.constraint(equalTo: bannerImageView.bottomAnchor, constant: -50),
+            stackButton.heightAnchor.constraint(equalToConstant: 48),
+            stackButton.leadingAnchor.constraint(equalTo: leadingAnchor),
+            stackButton.trailingAnchor.constraint(equalTo: trailingAnchor),
             
             titleLabel.topAnchor.constraint(equalTo: bannerImageView.bottomAnchor, constant: padding),
             

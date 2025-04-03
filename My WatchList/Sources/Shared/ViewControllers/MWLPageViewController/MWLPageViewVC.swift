@@ -11,8 +11,8 @@ import Hero
 class MWLPageViewVC: UIPageViewController {
     
     private var pages: [UIViewController] = []
-    private var items:[String] = []
-    private var segmentedControl: UISegmentedControl?
+    private var items: [String] = []
+    var segmentedControl: UISegmentedControl?
     
     weak var flowDelegate: TabBarFlowDelegate?
     
@@ -34,6 +34,8 @@ class MWLPageViewVC: UIPageViewController {
         self.pages = getPages()
         self.items = getPagesNames()
         self.hero.isEnabled = true
+        edgesForExtendedLayout = .all
+        extendedLayoutIncludesOpaqueBars = true
     }
     
     required init?(coder: NSCoder) {
@@ -49,29 +51,9 @@ class MWLPageViewVC: UIPageViewController {
     }
     
     private func setupPageController() {
-//        let favoritesMoviesVC = FavoritesListVC(
-//            contentView: FavoritesListView(),
-//            viewModel: FavoritesViewModel(),
-//            type: .movies,
-//            flowDelegate: flowDelegate
-//        )
-////        let favoritesMoviesNC = UINavigationController(rootViewController: favoritesMoviesVC)
-//        let favoritesTvVC = FavoritesListVC(
-//            contentView: FavoritesListView(),
-//            viewModel: FavoritesViewModel(),
-//            type: .tv,
-//            flowDelegate: flowDelegate
-//        )
-////        let favoritesTvNC = UINavigationController(rootViewController: favoritesTvVC)
-//        pages = [
-//            favoritesMoviesVC,
-//            favoritesTvVC,
-//        ]
-        
         if let firstViewController = pages.first  {
             setViewControllers([firstViewController], direction: .forward, animated: false)
         }
-       
     }
     
     private func setupSegmentedControl(){
@@ -80,7 +62,7 @@ class MWLPageViewVC: UIPageViewController {
         segmentedControl.addTarget(self, action: #selector(didSelect(_:)), for: .valueChanged)
         navigationItem.titleView = segmentedControl
         self.segmentedControl = segmentedControl
-        
+        navigationController?.isNavigationBarHidden = false
     }
     
     @objc

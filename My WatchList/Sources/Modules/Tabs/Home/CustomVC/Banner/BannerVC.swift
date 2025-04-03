@@ -162,7 +162,7 @@ class BannerVC: UIViewController {
     @objc
     private func didTapWatchList(){
         if PersistenceManager.getSessionId() == nil {
-            let viewController = MWLLoginViewVC()
+            let viewController = MWLLoginVC()
             present(viewController, animated: true)
         } else {
             viewModel.toogleWatchList()

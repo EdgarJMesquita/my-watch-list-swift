@@ -31,10 +31,6 @@ class BannerViewModel {
                 isWatchList = states.watchlist
                 delegate?.isWatchListDidLoad(isWatchList: isWatchList)
             } catch {
-                print(error)
-                guard error is MWLError else {
-                    return
-                }
             }
         }
     }

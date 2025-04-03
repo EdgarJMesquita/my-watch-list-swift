@@ -82,45 +82,58 @@ class PersonDetailsVC: UIViewController {
     }
     
     private func setupUI(){
-        // TODO: Refactor
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
             
-            navigationItem.backButtonTitle = viewModel.person?.name
-            contentView.titleLabel.text = viewModel.person?.name
-            contentView.overviewLabel.text = viewModel.person?.biography
-            
-            let birthday = viewModel.person?.birthday?.dateFormat(
-                .dateTime
-                    .day()
-                    .month(.abbreviated)
-                    .year()
-            )
-            
-            contentView.birthDateLabel.text = "Birth: \(birthday ?? "Unknown")"
-            contentView.placeBirthLabel.text = viewModel.person?.placeOfBirth ?? "Unknown"
-            
-            if let credits = viewModel.person?.combinedCredits?.cast {
-                contentView.creditsCollectionView.configure(with: credits)
-            }
-            
-            if contentView.overviewLabel.isTruncated() {
-                contentView.overviewLabel.isUserInteractionEnabled = true
-                let tapRecognizer = UITapGestureRecognizer(
-                    target: self,
-                    action: #selector(presentOverview)
-                )
-                contentView.overviewLabel.addGestureRecognizer(tapRecognizer)
-            }
-            
-            if let images = viewModel.person?.images?.profiles  {
-                contentView.imagesCollectionView.configure(with: images)
-                contentView.imagesCollectionView.customDelegate = self
-            } else {
-                contentView.imagesCollectionView.showEmptyMessage()
-            }
+            setupTexts()
+            setupCredits()
+            setupOverview()
+            setupImages()
             
             contentView.activityIndicator.stopAnimating()
+        }
+    }
+    
+    private func setupTexts(){
+        navigationItem.backButtonTitle = viewModel.person?.name
+        contentView.titleLabel.text = viewModel.person?.name
+        contentView.overviewLabel.text = viewModel.person?.biography
+
+        let birthday = viewModel.person?.birthday?.dateFormat(
+            .dateTime
+                .day()
+                .month(.abbreviated)
+                .year()
+        )
+        
+        contentView.birthDateLabel.text = "Birth: \(birthday ?? "Unknown")"
+        contentView.placeBirthLabel.text = viewModel.person?.placeOfBirth ?? "Unknown"
+        
+    }
+    
+    private func setupCredits(){
+        if let credits = viewModel.person?.combinedCredits?.cast {
+            contentView.creditsCollectionView.configure(with: credits)
+        }
+    }
+    
+    private func setupOverview(){
+        if contentView.overviewLabel.isTruncated() {
+            contentView.overviewLabel.isUserInteractionEnabled = true
+            let tapRecognizer = UITapGestureRecognizer(
+                target: self,
+                action: #selector(presentOverview)
+            )
+            contentView.overviewLabel.addGestureRecognizer(tapRecognizer)
+        }
+    }
+    
+    private func setupImages(){
+        if let images = viewModel.person?.images?.profiles  {
+            contentView.imagesCollectionView.configure(with: images)
+            contentView.imagesCollectionView.customDelegate = self
+        } else {
+            contentView.imagesCollectionView.showEmptyMessage()
         }
     }
     

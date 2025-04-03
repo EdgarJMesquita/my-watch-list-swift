@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import AuthenticationServices
 
 class ProfileViewModel {
     let service: AuthService
@@ -17,9 +18,9 @@ class ProfileViewModel {
         self.service = AuthService()
     }
     
-    func authenticate(){
+    func authenticate(delegate: ASWebAuthenticationPresentationContextProviding){
         Task {
-            try await service.authenticate()
+            try await service.authenticate(delegate: delegate)
         }
     }
     
@@ -42,6 +43,10 @@ class ProfileViewModel {
             delegate?.didLoadAccountDetails(user: user)
             self.user = user
         }
+    }
+    
+    func logout(){
+        PersistenceManager.clear()
     }
 }
 

@@ -29,4 +29,8 @@ protocol ViewControllersFactoryProtocol: AnyObject {
     func makeFullScreenImageVC(imagePath: String) -> FullScreenImageViewVC
     
     func makeSuccessLoginVC(username: String) -> MWLSuccessLoginVC
+    
+    func makeLoginVC() -> MWLLoginVC
+    
+    func makeRatedListPageViewVC(flowDelegate: TabBarFlowDelegate) -> RatedListPageViewVC
 }

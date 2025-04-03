@@ -31,6 +31,12 @@ class MWLButton: UIButton {
         self.init(title: title, backgroundColor: .mwlPrimary, titleColor: .white)
     }
     
+    convenience init(title: String, color: UIColor, outlined: Bool){
+        self.init(title: title, backgroundColor: .mwlBackground, titleColor: color)
+        layer.borderWidth = 2
+        layer.borderColor = color.cgColor
+    }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

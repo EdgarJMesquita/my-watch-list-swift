@@ -68,4 +68,14 @@ final class ViewControllersFactory: ViewControllersFactoryProtocol {
         return viewController
     }
     
+    func makeLoginVC() -> MWLLoginVC {
+        let viewController = MWLLoginVC()
+        return viewController
+    }
+    
+    func makeRatedListPageViewVC(flowDelegate: TabBarFlowDelegate) -> RatedListPageViewVC {
+        let viewController = RatedListPageViewVC(flowDelegate: flowDelegate)
+        return viewController
+    }
+    
 }

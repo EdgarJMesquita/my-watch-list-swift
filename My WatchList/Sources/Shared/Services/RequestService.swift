@@ -141,7 +141,6 @@ class RequestService {
         
         let urlString = "\(baseURL)\(path)"
         
-        
         guard var components = URLComponents(string: urlString) else {
             throw MWLError.invalidURL
         }
@@ -165,6 +164,48 @@ class RequestService {
           "content-type": "application/json",
         ]
         request.httpBody = postData
+        
+        let (_, response) = try await URLSession.shared.data(for: request)
+        
+        guard
+            let response = response as? HTTPURLResponse,
+            String(response.statusCode).starts(with: "2")
+        else {
+            if let a = response as? HTTPURLResponse {
+                print(a.statusCode)
+            }
+            throw MWLError.invalidResponse
+        }
+    }
+    
+    
+    func delete(with path: String) async throws {
+        
+        guard
+            let apiKey = EnvManager.get(key: .tmdbAPIKey),
+            let sessionId = PersistenceManager.getSessionId()
+        else {
+            throw MWLError.missingConfigFile
+        }
+        
+        let urlString = "\(baseURL)\(path)"
+        
+        guard var components = URLComponents(string: urlString) else {
+            throw MWLError.invalidURL
+        }
+        
+        components.queryItems = [
+            URLQueryItem(name: "api_key", value: apiKey),
+            URLQueryItem(name: "session_id", value: sessionId)
+        ]
+   
+        
+        guard let url = components.url else {
+            throw MWLError.invalidURL
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "DELETE"
         
         let (_, response) = try await URLSession.shared.data(for: request)
         

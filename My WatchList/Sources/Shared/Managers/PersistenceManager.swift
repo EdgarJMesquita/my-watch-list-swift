@@ -19,7 +19,7 @@ enum PersistenceManager {
     static private let defaults = UserDefaults.standard
     
     
-    enum Keys: String {        
+    enum Keys: String, CaseIterable {
         case favorites = "favorites"
         case sessionId = "sessionId"
         case requestToken = "requestToken"
@@ -180,4 +180,9 @@ enum PersistenceManager {
         
     }
     
+    static func clear(){
+        for key in Keys.allCases {
+            defaults.removeObject(forKey: key.rawValue)
+        }
+    }
 }

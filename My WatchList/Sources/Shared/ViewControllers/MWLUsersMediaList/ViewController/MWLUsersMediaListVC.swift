@@ -31,6 +31,7 @@ class MWLUsersMediaListVC: MWLBaseViewController {
     init(
         contentView: MWLUsersMediaListView,
         viewModel: MWLUsersMediaViewModel,
+        title: String,
         flowDelegate: TabBarFlowDelegate? = nil
     ) {
         self.contentView = contentView
@@ -41,6 +42,7 @@ class MWLUsersMediaListVC: MWLBaseViewController {
         
         viewModel.delegate = self
         self.hero.isEnabled = true
+        navigationItem.title = title
     }
     
     

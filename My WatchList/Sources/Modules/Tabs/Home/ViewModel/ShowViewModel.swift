@@ -24,16 +24,11 @@ class ShowViewModel {
                 delegate?.showsDidUpdate()
             } catch {
                 print(error)
-                guard error is MWLError else {
-                    return
-                }
             }
 
         }
     }
     
-    
-
 }
 
 protocol ShowViewModelDelegate: AnyObject {

@@ -7,5 +7,5 @@
 
 import UIKit
 
-protocol ShowDetailsFlowDelegate: AnyObject, FullScreenImageProtocol, PresentPersonDetailsProtocol, PresentShowDetailsProtocol, PresentVideoPlayerProtocol {
+protocol ShowDetailsFlowDelegate: AnyObject, FullScreenImageProtocol, PresentPersonDetailsProtocol, PresentShowDetailsProtocol, PresentVideoPlayerProtocol, PresentLoginProtocol {
 }

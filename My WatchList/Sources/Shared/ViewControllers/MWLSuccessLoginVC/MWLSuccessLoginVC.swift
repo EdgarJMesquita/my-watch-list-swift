@@ -43,7 +43,7 @@ class MWLSuccessLoginVC: UIViewController {
     
     
     private lazy var actionButton: MWLButton = {
-        let button = MWLButton(title: "Browse")
+        let button = MWLButton(title: "Start browsing")
         button.addTarget(self, action: #selector(didTapBrowser), for: .touchUpInside)
         return button
     }()

@@ -7,7 +7,7 @@
 
 import UIKit
 
-class MWLLoginViewVC: UIViewController {
+class MWLLoginVC: UIViewController {
 
     
     let contentView = LoginView()
@@ -32,7 +32,7 @@ class MWLLoginViewVC: UIViewController {
     
 }
 
-extension MWLLoginViewVC: LoginViewDelegate {
+extension MWLLoginVC: LoginViewDelegate {
     func didTapActionButton() {
         dismiss(animated: true)
     }

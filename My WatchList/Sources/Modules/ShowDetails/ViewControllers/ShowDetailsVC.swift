@@ -65,7 +65,7 @@ class ShowDetailsVC: UIViewController {
         view.backgroundColor = .mwlBackground
         view.addSubview(contentView)
         setupContentViewToBounds(contentView: contentView, safe: false)
-        configureWatchListButtonAction()
+        configureButtonActions()
     }
     
     private func setupBanner(){
@@ -106,10 +106,15 @@ class ShowDetailsVC: UIViewController {
         viewModel.toogleFavorite()
     }
     
-    private func configureWatchListButtonAction(){
+    private func configureButtonActions(){
         contentView.wishListButton.addTarget(
             self,
             action: #selector(didTapWatchList),
+            for: .touchUpInside
+        )
+        contentView.rateButton.addTarget(
+            self,
+            action: #selector(didTapRatingButton),
             for: .touchUpInside
         )
     }
@@ -117,9 +122,6 @@ class ShowDetailsVC: UIViewController {
     private func setupWatchListButton(isWatchList: Bool){
         let buttonTitle = isWatchList ? "- WatchList" : "+ WatchList"
         DispatchQueue.main.async { [weak self] in
-            UIView.animate(withDuration: 1){ [weak self] in
-                self?.contentView.wishListButton.alpha = 1
-            }
             self?.contentView.wishListButton.setTitle(buttonTitle, for: .normal)
         }
     }
@@ -127,10 +129,45 @@ class ShowDetailsVC: UIViewController {
     @objc
     private func didTapWatchList(){
         if PersistenceManager.getSessionId() == nil {
-            let viewController = MWLLoginViewVC()
-            present(viewController, animated: true)
+            flowDelegate?.presentLogin()
         } else {
             viewModel.toogleWatchList()
+        }
+    }
+    
+    private func setupRatingBottom(rate: Float?){
+        if let rate {
+            DispatchQueue.main.async { [weak self] in
+                guard let self else {return}
+                let title = "\(rate)"
+                let image = UIImage(systemName: "star.fill")
+                contentView.rateButton.setImage(image, for: .normal)
+                contentView.rateButton.setTitle(" \(title)", for: .normal)
+                contentView.tintColor = .white
+            }
+        } else {
+            DispatchQueue.main.async { [weak self] in
+                guard let self else {return}
+                contentView.rateButton.setTitle("Give a rate", for: .normal)
+                contentView.rateButton.setImage(nil, for: .normal)
+            }
+        }
+    }
+    
+    @objc
+    private func didTapRatingButton(){
+        if PersistenceManager.getSessionId() == nil {
+            flowDelegate?.presentLogin()
+        } else {
+            let title = "Add rating to\"\(viewModel.details?.getTitle() ?? "Unknown")\""
+            let viewController = RatingVC(
+                contentView: RatingView(),
+                title: title,
+                initialValue: viewModel.rate ?? 0.0,
+                showDelete: viewModel.rate != nil
+            )
+            viewController.delegate = self
+            present(viewController, animated: true)
         }
     }
     
@@ -181,10 +218,10 @@ class ShowDetailsVC: UIViewController {
     }
     
     private func setupVoteCount(){
-        guard let voteCount = viewModel.details?.voteCount.formatBigNumbers() else {
+        guard let voteCount = viewModel.details?.voteAverage else {
             return
         }
-        contentView.voteCountLabel.text = "Votes: \(voteCount)"
+        contentView.voteCountLabel.text = "Average: \(voteCount)"
     }
     
     private func setupCountries(){
@@ -222,7 +259,6 @@ class ShowDetailsVC: UIViewController {
         
         contentView.spokenLanguageLabel.text = "Languages: \(spokenLanguageText) "
     }
-    
     
     private func setupCast(){
         guard 
@@ -297,17 +333,22 @@ class ShowDetailsVC: UIViewController {
 }
 
 extension ShowDetailsVC: DetailsViewModelDelegate {
-    func isWatchListDidLoad(isWatchList: Bool) {
+    func didLoadStates(isWatchList: Bool) {
         setupWatchListButton(isWatchList: isWatchList)
     }
     
-    func isFavoriteDidLoad(isFavorite: Bool) {
+    func didLoadStates(isFavorite: Bool) {
         setupFavorite(isFavorite: isFavorite)
     }
     
     func detailsDidLoad() {
         setupDetails()
     }
+    
+    func didLoadStates(rate: Float?) {
+        setupRatingBottom(rate: rate)
+    }
+    
 }
 
 extension ShowDetailsVC: MWLCastCollectionViewDelegate {
@@ -331,6 +372,16 @@ extension ShowDetailsVC: MWLImagesCollectionViewDelegate {
 extension ShowDetailsVC: MWLCredtisCollectionViewDelegate {
     func didTapShow(show: Media) {
         flowDelegate?.presentShowDetails(id: show.id, posterPath: show.posterPath, type: show.getType())
+    }
+}
+
+extension ShowDetailsVC: RatingVCDelegate {
+    func didTapRate(rate: Float) {
+        viewModel.rateMovie(rate: rate)
+    }
+    
+    func didTapDelete() {
+        viewModel.deleteRate()
     }
 }
 

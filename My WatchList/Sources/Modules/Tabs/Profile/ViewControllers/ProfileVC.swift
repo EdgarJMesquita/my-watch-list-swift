@@ -6,10 +6,12 @@
 //
 
 import UIKit
+import AuthenticationServices
 
 class ProfileVC: MWLBaseViewController {
     let contentView: ProfileView
     let viewModel: ProfileViewModel
+    weak var flowDelegate: TabBarFlowDelegate?
     
     init(contentView: ProfileView, viewModel: ProfileViewModel) {
         self.contentView = contentView
@@ -34,17 +36,28 @@ class ProfileVC: MWLBaseViewController {
         
         if viewModel.isLogged {
             dismissLoginView()
+            showLoadingView()
+            setupLogout()
         } else {
             showLoginView()
         }
         
-        showLoadingView()
     }
     
     private func setup(){
         view.addSubview(contentView)
         setupContentViewToBounds(contentView: contentView)
         view.backgroundColor = .mwlBackground
+        setupButtonAction()
+    }
+    
+    private func setupButtonAction(){
+        contentView.actionButton.addTarget(self, action: #selector(didTapActionButton), for: .touchUpInside)
+    }
+    
+    @objc
+    private func didTapActionButton(){
+        flowDelegate?.navigateToRatedListPageView()
     }
     
     private func configure(with user: User){
@@ -62,9 +75,33 @@ class ProfileVC: MWLBaseViewController {
     
     @objc
     private func authenticate(){
-        viewModel.authenticate()
+        viewModel.authenticate(delegate: self)
     }
     
+    private func setupLogout(){
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Exit", style: .plain, target: self, action: #selector(didTapLogout))
+    }
+    
+    @objc
+    private func didTapLogout(){
+        let alertController = UIAlertController(title: "Loggin out", message: "Do you really wanna logout?", preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        alertController.addAction(
+            UIAlertAction(
+                title: "Yes",
+                style: .destructive,
+                handler: { _ in
+                    self.logout()
+                }
+             )
+        )
+        present(alertController, animated: true)
+    }
+    
+    private func logout(){
+        viewModel.logout()
+        flowDelegate?.resetApp()
+    }
 }
 
 extension ProfileVC: ProfileViewModelDelegate {
@@ -75,4 +112,10 @@ extension ProfileVC: ProfileViewModelDelegate {
 
 #Preview {
     ProfileVC(contentView: ProfileView(), viewModel: ProfileViewModel())
+}
+
+extension ProfileVC: ASWebAuthenticationPresentationContextProviding {
+    func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
+        view.window!
+    }
 }

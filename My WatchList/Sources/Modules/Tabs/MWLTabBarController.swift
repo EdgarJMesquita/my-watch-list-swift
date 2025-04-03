@@ -87,6 +87,7 @@ class MWLTabBarController: UITabBarController {
     
     private func createProfileNC() -> UIViewController {
         let profileVC = ProfileVC(contentView: ProfileView(), viewModel: ProfileViewModel())
+        profileVC.flowDelegate = flowDelegate
         profileVC.title = "Profile"
         profileVC.tabBarItem = UITabBarItem(title: "Profile", image: .mwlProfile, tag: 4)
         setupTabBarItemStyle(to: profileVC)

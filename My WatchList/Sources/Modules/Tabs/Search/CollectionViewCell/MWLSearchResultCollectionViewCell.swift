@@ -86,19 +86,7 @@ class MWLSearchResultCollectionViewCell: UICollectionViewCell {
         } else {
             voteCountIcon.alpha = 0
         }
-//        
-//        if show.mediaType == .person {
-//            
-//            imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor).isActive = true
-//            imageView.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = false
-//            imageView.layer.cornerRadius = imageView.frame.width / 2
-////            imageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
-//        } else {
-//            imageView.layer.cornerRadius = 8
-//            imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 1.3).isActive = true
-//            imageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = false
-////            imageView.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
-//        }
+
         
         if let imagePath = show.getImagePath() {
             imageView.hero.id = "\(currentIndex)\(imagePath)"

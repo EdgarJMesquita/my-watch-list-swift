@@ -45,5 +45,16 @@ class ShowDetailsService: RequestService {
         return try await create(with: path, body: parameters)
     }
     
+    func updateRate(mediaId: Int, mediaType: TMDBType, rate: Float) async throws {
+        let path = "/\(mediaType.rawValue)/\(mediaId)/rating"
+        let parameters:[String : Float] = [
+            "value": rate
+        ]
+        return try await create(with: path, body: parameters)
+    }
     
+    func deleteRate(mediaId: Int, mediaType: TMDBType) async throws {
+        let path = "/\(mediaType.rawValue)/\(mediaId)/rating"
+        return try await delete(with: path)
+    }
 }

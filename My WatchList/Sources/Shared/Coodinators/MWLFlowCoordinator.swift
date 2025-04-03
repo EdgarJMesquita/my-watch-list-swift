@@ -126,4 +126,24 @@ extension MWLFlowCoordinator: PersonDetailsFlowDelegate, ShowDetailsFlowDelegate
         tabBarController?.setSelectedIndex(index: 4)
     }
     
+    func navigateToRatedListPageView() {
+        let viewController = viewControllerFactory.makeRatedListPageViewVC(flowDelegate: self)
+        navigationController?.pushViewController(viewController, animated: true)
+    }
+}
+
+
+extension MWLFlowCoordinator: PresentLoginProtocol {
+    func presentLogin() {
+        let viewController = viewControllerFactory.makeLoginVC()
+        navigationController?.present(viewController, animated: true)
+    }
+}
+
+extension MWLFlowCoordinator: ResetAppProtocol {
+    func resetApp() {
+        tabBarController = viewControllerFactory.makeTabBarVC(flowDelegate: self, previousIndex: 1)
+        navigationController?.setNavigationBarHidden(false, animated: true)
+        navigationController?.setViewControllers([tabBarController!], animated: false)
+    }
 }

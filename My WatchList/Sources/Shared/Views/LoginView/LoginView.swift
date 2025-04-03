@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import AuthenticationServices
 
 class LoginView: UIView {
     let padding: CGFloat = 24
@@ -63,7 +64,7 @@ class LoginView: UIView {
     @objc
     private func didTapActionButton(){
         Task {
-            try await AuthService().authenticate()
+            try await AuthService().authenticate(delegate: self)
         }
         delegate?.didTapActionButton()
     }
@@ -104,4 +105,10 @@ class LoginView: UIView {
 
 protocol LoginViewDelegate: AnyObject {
     func didTapActionButton()
+}
+
+extension LoginView: ASWebAuthenticationPresentationContextProviding {
+    func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
+        window!
+    }
 }

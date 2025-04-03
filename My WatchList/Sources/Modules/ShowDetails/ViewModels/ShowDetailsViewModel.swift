@@ -12,10 +12,12 @@ class ShowDetailsViewModel {
     weak var delegate: DetailsViewModelDelegate?
     public private(set) var isFavorite = false
     public private(set) var isWatchList = false
+    public private(set) var rate: Float?
     public private(set) var details: ShowDetails?
+    public private(set) var mediaId: Int?
+    public private(set) var mediaType: TMDBType?
     private let tmdbService: ShowDetailsService
-    private(set) var mediaStates: MediaStates?
-
+    
     
     init(delegate: DetailsViewModelDelegate? = nil) {
         self.tmdbService = ShowDetailsService()
@@ -23,24 +25,48 @@ class ShowDetailsViewModel {
     }
     
     func loadData(id: Int, type: TMDBType){
-        
+        self.mediaId = id
+        self.mediaType = type
         Task {
             details = try await tmdbService.getShowDetails(for: id, type: type)
             delegate?.detailsDidLoad()
         }
         
         Task {
-            guard PersistenceManager.getSessionId() != nil else {
-                return
-            }
-            let states = try await tmdbService.getMediaStatus(mediaId: id, type: type)
-            isFavorite = states.favorite
-            isWatchList = states.watchlist
-            delegate?.isFavoriteDidLoad(isFavorite: isFavorite)
-            delegate?.isWatchListDidLoad(isWatchList: isWatchList)
+            await getMediaStates()
         }
         
     }
+    
+    private func getMediaStates() async {
+        do {
+            guard
+                PersistenceManager.getSessionId() != nil,
+                let mediaId = mediaId,
+                let mediaType = mediaType
+            else {
+                return
+            }
+            let states = try await tmdbService.getMediaStatus(mediaId: mediaId, type: mediaType)
+            isFavorite = states.favorite
+            isWatchList = states.watchlist
+           
+            delegate?.didLoadStates(isFavorite: isFavorite)
+            delegate?.didLoadStates(isWatchList: isWatchList)
+            
+            switch states.rated {
+            case .bool(_):
+                delegate?.didLoadStates(rate: nil)
+            case .ratedClass(let rate):
+                self.rate = Float(rate.value)
+                delegate?.didLoadStates(rate: rate.value)
+            }
+        } catch {
+            
+        }
+   
+    }
+
     
     
     func toogleFavorite() {
@@ -55,7 +81,7 @@ class ShowDetailsViewModel {
         Task {
             do {
                 isFavorite.toggle()
-                delegate?.isFavoriteDidLoad(isFavorite: isFavorite)
+                delegate?.didLoadStates(isFavorite: isFavorite)
                 try await tmdbService.updateMediaFavorite(
                     accountId: accountId,
                     mediaId: details.id,
@@ -81,7 +107,7 @@ class ShowDetailsViewModel {
         Task {
             do {
                 isWatchList.toggle()
-                delegate?.isWatchListDidLoad(isWatchList: isWatchList)
+                delegate?.didLoadStates(isWatchList: isWatchList)
                 try await tmdbService.updateMediaWatchList(
                     accountId: accountId,
                     mediaId: details.id,
@@ -97,10 +123,62 @@ class ShowDetailsViewModel {
     }
     
     
+    func rateMovie(rate: Float) {
+        guard
+            let details = self.details,
+            PersistenceManager.getSessionId() != nil
+        else {
+            return
+        }
+        
+        Task {
+            do {
+                delegate?.didLoadStates(rate: rate)
+                isWatchList = false
+                self.rate = rate
+                delegate?.didLoadStates(isWatchList: isWatchList)
+                try await tmdbService.updateRate(
+                    mediaId: details.id,
+                    mediaType: details.getType(),
+                    rate: rate
+                )
+            } catch {
+                print(error)
+            }
+   
+        }
+        
+    }
+    
+    
+    func deleteRate() {
+        guard
+            let details = self.details,
+            PersistenceManager.getSessionId() != nil
+        else {
+            return
+        }
+        
+        Task {
+            do {
+                delegate?.didLoadStates(rate: nil)
+                rate = nil
+                try await tmdbService.deleteRate(
+                    mediaId: details.id,
+                    mediaType: details.getType()
+                )
+            } catch {
+                print(error)
+            }
+   
+        }
+        
+    }
 }
 
 protocol DetailsViewModelDelegate: AnyObject {
     func detailsDidLoad()
-    func isFavoriteDidLoad(isFavorite: Bool)
-    func isWatchListDidLoad(isWatchList: Bool)
+    func didLoadStates(isFavorite: Bool)
+    func didLoadStates(isWatchList: Bool)
+    func didLoadStates(rate: Float?)
 }

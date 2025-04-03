@@ -29,7 +29,11 @@ class ProfileView: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-
+    
+    lazy var actionButton: MWLButton = {
+        let button = MWLButton(title: "My rated movies/shows")
+        return button
+    }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -48,7 +52,8 @@ class ProfileView: UIView {
     private func setupHierarchy(){
         addSubviews(
             avatarImageView,
-            titleLabel
+            titleLabel,
+            actionButton
         )
     }
     
@@ -63,6 +68,10 @@ class ProfileView: UIView {
             titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor,constant: padding),
             titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor,constant: -padding),
             
+            actionButton.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -24),
+            actionButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24),
+            actionButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -24),
+            actionButton.heightAnchor.constraint(equalToConstant: 40)
         ])
     }
   

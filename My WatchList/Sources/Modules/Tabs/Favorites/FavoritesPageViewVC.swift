@@ -11,17 +11,19 @@ import UIKit
 class FavoritesPageViewVC: MWLPageViewVC {
     
     override func getPages() -> [UIViewController] {
-        let favoritesMoviesVC = MWLUsersMediaListVC(
+        let favoritesMoviesVC = UINavigationController(rootViewController: MWLUsersMediaListVC(
            contentView: MWLUsersMediaListView(),
            viewModel: MWLUsersMediaViewModel(service: FavoriteService(), type: .movies),
+           title: "Favorites",
            flowDelegate: flowDelegate
-       )
+       ))
        
-       let favoritesTvVC = MWLUsersMediaListVC(
+       let favoritesTvVC = UINavigationController(rootViewController: MWLUsersMediaListVC(
            contentView: MWLUsersMediaListView(),
            viewModel: MWLUsersMediaViewModel(service: FavoriteService(), type: .tv),
+           title: "Favorites",
            flowDelegate: flowDelegate
-       )
+       ))
         
         return [favoritesMoviesVC, favoritesTvVC]
     }
