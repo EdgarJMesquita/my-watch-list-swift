@@ -10,8 +10,6 @@ import UIKit
 
 class MWLBaseViewController: UIViewController {
     
-    
-    private var loginView: LoginView?
     private var containerView: UIView?
     
     
@@ -70,18 +68,4 @@ class MWLBaseViewController: UIViewController {
         }
     }
     
-    
-    func showLoginView(){
-        let loginView = LoginView()
-        loginView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(loginView)
-        setupContentViewToBounds(contentView: loginView)
-        self.loginView = loginView
-    }
-    
-    
-    func dismissLoginView(){
-        loginView?.removeFromSuperview()
-        loginView = nil
-    }
 }

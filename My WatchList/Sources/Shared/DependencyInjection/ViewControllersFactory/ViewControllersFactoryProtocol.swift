@@ -30,7 +30,7 @@ protocol ViewControllersFactoryProtocol: AnyObject {
     
     func makeSuccessLoginVC(username: String) -> MWLSuccessLoginVC
     
-    func makeLoginVC() -> MWLLoginVC
+    func makeLoginVC(flowDelegate: TabBarFlowDelegate) -> LoginVC
     
     func makeRatedListPageViewVC(flowDelegate: TabBarFlowDelegate) -> RatedListPageViewVC
 }

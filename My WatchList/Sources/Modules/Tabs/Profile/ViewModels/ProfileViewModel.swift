@@ -9,32 +9,24 @@ import Foundation
 import AuthenticationServices
 
 class ProfileViewModel {
+    
     let service: AuthService
     private(set) var user: User? = nil
-    private(set) var isLogged = false
     weak var delegate: ProfileViewModelDelegate?
+    
     
     init() {
         self.service = AuthService()
     }
     
-    func authenticate(delegate: ASWebAuthenticationPresentationContextProviding){
-        Task {
-            try await service.authenticate(delegate: delegate)
-        }
-    }
     
     func loadData(){
-        checkSession()
+        guard PersistenceManager.getSessionId() != nil else {
+            return
+        }
+        getAccountDetails()
     }
     
-    private func checkSession(){
-        isLogged = PersistenceManager.getSessionId() != nil
-        
-        if isLogged {
-            getAccountDetails()
-        }
-    }
     
     private func getAccountDetails(){
         Task {

@@ -17,15 +17,25 @@ class AuthService: RequestService {
         return try await request(with: path, model: RequestTokenResponse.self, cache: false).requestToken
     }
     
-    func authenticate(delegate: ASWebAuthenticationPresentationContextProviding) async throws {
-        
-        let requestToken = try await getRequestToken()
-        
-        let authUrlString = "https://www.themoviedb.org/authenticate/\(requestToken)?redirect_to=com.edgar.My-WatchList://main"
-        
-        guard let url = URL(string: authUrlString) else {
+    func getAuthURL(requestToken: String) throws -> URL {
+        let urlString = "https://www.themoviedb.org/authenticate/\(requestToken)?redirect_to=com.edgar.My-WatchList://main"
+        guard let url = URL(string: urlString) else {
             throw MWLError.invalidURL
         }
+        return url
+    }
+    
+    func getCallbackURLScheme() -> String {
+        return "com.edgar.My-WatchList"
+    }
+    
+    func authenticate() async throws {
+        
+//        let authUrlString = "https://www.themoviedb.org/authenticate/\(requestToken)?redirect_to=com.edgar.My-WatchList://main"
+//        
+//        guard let url = URL(string: authUrlString) else {
+//            throw MWLError.invalidURL
+//        }
         
 //        let session = ASWebAuthenticationSession(url: url, callbackURLScheme: "com.edgar.My-WatchList"){ callbackURL, error in
 //            print(url)
@@ -58,14 +68,14 @@ class AuthService: RequestService {
 //        session.presentationContextProvider = delegate
 //        session.start()
         
-        DispatchQueue.main.async {
-            UIApplication.shared.open(url)
-        }
-       
+//        DispatchQueue.main.async {
+//            UIApplication.shared.open(url)
+//        }
+//       
     }
     
     
-    static func fetchSessionId(requestToken: String) async throws {
+    func fetchSessionId(requestToken: String) async throws -> String {
         
         guard let apiKey = EnvManager.get(key: .tmdbAPIKey) else {
             throw MWLError.missingConfigFile
@@ -109,11 +119,8 @@ class AuthService: RequestService {
         
         let requestSessionResponse = try JSONDecoder().decode(RequestSessionResponse.self, from: data)
         
-        PersistenceManager.saveSessionId(requestSessionResponse.sessionId)
+        return requestSessionResponse.sessionId
         
-    
-        let account = try await RequestService.request(with: "\(baseURL)/account", model: User.self)
-        PersistenceManager.set(key: .accountId, value: account.id)
     }
     
     func getAccountDetails() async throws -> User {

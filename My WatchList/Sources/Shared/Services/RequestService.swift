@@ -38,7 +38,6 @@ class RequestService {
             components.queryItems?.append(URLQueryItem(name: "session_id", value: sessionId))
         }
         
-        
         guard let url = components.url else {
             throw MWLError.invalidURL
         }

@@ -101,16 +101,15 @@ class MovieListVC: UIViewController {
     }
     
     private func setupConstraints(){
-        let padding: CGFloat = 24
         
         NSLayoutConstraint.activate([
-            titleBabel.topAnchor.constraint(equalTo: view.topAnchor, constant: padding),
-            titleBabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),
+            titleBabel.topAnchor.constraint(equalTo: view.topAnchor, constant: Metrics.medium),
+            titleBabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Metrics.medium),
             
             subtitleLabel.centerYAnchor.constraint(equalTo: titleBabel.centerYAnchor),
-            subtitleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding),
+            subtitleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Metrics.medium),
             
-            collectionView.topAnchor.constraint(equalTo: titleBabel.bottomAnchor,constant: padding),
+            collectionView.topAnchor.constraint(equalTo: titleBabel.bottomAnchor,constant: Metrics.medium),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             collectionView.heightAnchor.constraint(equalToConstant: 193)

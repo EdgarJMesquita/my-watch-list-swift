@@ -13,7 +13,7 @@ struct User: Codable {
     let id: Int
     let iso639_1, iso3166_1, name: String
     let includeAdult: Bool
-    let username: String?
+    let username: String
 
     enum CodingKeys: String, CodingKey {
         case avatar, id

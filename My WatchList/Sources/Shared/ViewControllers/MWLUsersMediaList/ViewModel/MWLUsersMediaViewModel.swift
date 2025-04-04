@@ -9,7 +9,6 @@ import Foundation
 import UIKit
 
 class MWLUsersMediaViewModel {
-    private(set) var isLogged = false
     private var items: [Media] = []
     private var filteredItems: [Media] = []
     private var isSearching = false
@@ -30,10 +29,7 @@ class MWLUsersMediaViewModel {
     
     
     func loadData(){
-        isLogged = checkSession()
-        
-        if isLogged == false {
-            delegate?.didGetUnauthorized()
+        guard checkSession() else {
             return
         }
         
@@ -57,11 +53,6 @@ class MWLUsersMediaViewModel {
         
         return true
     }
-    
-    
-//    func removeFavorite(favorite: Favorite) async throws {
-//       try await PersistenceManager.updateWith(favorite: favorite, actionType: .remove)
-//    }
     
 
     func onSearch(for searchController: UISearchController){

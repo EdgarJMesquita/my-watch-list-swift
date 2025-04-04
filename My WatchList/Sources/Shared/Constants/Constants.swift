@@ -11,3 +11,9 @@ import Foundation
 enum Constants: String {
     case TMDBBaseURL = "https://api.themoviedb.org/3"
 }
+
+enum Metrics {
+    static let large: CGFloat = 48
+    static let medium: CGFloat = 24
+    static let small: CGFloat = 12
+}

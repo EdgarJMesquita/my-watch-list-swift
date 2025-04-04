@@ -68,8 +68,9 @@ final class ViewControllersFactory: ViewControllersFactoryProtocol {
         return viewController
     }
     
-    func makeLoginVC() -> MWLLoginVC {
-        let viewController = MWLLoginVC()
+    func makeLoginVC(flowDelegate: TabBarFlowDelegate) -> LoginVC {
+        let contentView = LoginView()
+        let viewController = LoginVC(contentView: contentView, viewModel: LoginViewModel(), flowDelegate: flowDelegate)
         return viewController
     }
     

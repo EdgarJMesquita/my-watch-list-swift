@@ -22,15 +22,20 @@ class BannerViewModel {
     func loadData(type: TMDBType, category: TMDBCategory) async {
         Task {
             do {
-            
+              
                 let shows = try await service.getTrendingMovies()
                 let index = Int.random(in: 0..<shows.count)
                 details = shows[index]
                 delegate?.didLoadDetails()
-                let states = try await service.getMediaStatus(mediaId: details!.id, type: type)
-                isWatchList = states.watchlist
-                delegate?.isWatchListDidLoad(isWatchList: isWatchList)
+                
+                if PersistenceManager.getSessionId() != nil {
+                    let states = try await service.getMediaStatus(mediaId: details!.id, type: type)
+                    isWatchList = states.watchlist
+                    delegate?.isWatchListDidLoad(isWatchList: isWatchList)
+                }
+              
             } catch {
+                print(error)
             }
         }
     }

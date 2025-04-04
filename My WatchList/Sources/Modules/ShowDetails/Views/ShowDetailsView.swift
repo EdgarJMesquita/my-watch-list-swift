@@ -63,7 +63,7 @@ class ShowDetailsView: UIView {
     }()
     
     lazy var rateButton: MWLButton = {
-        let button = MWLButton(title: "Gibe a rate", backgroundColor: .mwlPrimary)
+        let button = MWLButton(title: "Give a rate", backgroundColor: .mwlPrimary)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -270,14 +270,12 @@ class ShowDetailsView: UIView {
     }
     
     private func setupConstraints(){
-        let padding: CGFloat = 24
         
         scrollView.pinToEdges(of: self)
         
         contentView.pinToEdges(of: scrollView)
         
         [
-//            wishListButton,
             titleLabel,
             overviewLabel, 
             detailsLabel,
@@ -293,8 +291,8 @@ class ShowDetailsView: UIView {
             spokenLanguageLabel,
             recommendationsLabel
         ].forEach {
-            $0.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: padding).isActive = true
-            $0.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -padding).isActive = true
+            $0.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Metrics.medium).isActive = true
+            $0.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Metrics.medium).isActive = true
         }
         
         NSLayoutConstraint.activate([
@@ -314,52 +312,52 @@ class ShowDetailsView: UIView {
             stackButton.leadingAnchor.constraint(equalTo: leadingAnchor),
             stackButton.trailingAnchor.constraint(equalTo: trailingAnchor),
             
-            titleLabel.topAnchor.constraint(equalTo: bannerImageView.bottomAnchor, constant: padding),
+            titleLabel.topAnchor.constraint(equalTo: bannerImageView.bottomAnchor, constant: Metrics.medium),
             
-            overviewLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: padding / 2),
+            overviewLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: Metrics.small),
 
             
-            detailsLabel.topAnchor.constraint(equalTo: overviewLabel.bottomAnchor, constant: padding),
+            detailsLabel.topAnchor.constraint(equalTo: overviewLabel.bottomAnchor, constant: Metrics.medium),
 
-            voteCountLabel.topAnchor.constraint(equalTo: detailsLabel.bottomAnchor, constant: padding / 2),
+            voteCountLabel.topAnchor.constraint(equalTo: detailsLabel.bottomAnchor, constant: Metrics.small),
             
-            genresLabel.topAnchor.constraint(equalTo: voteCountLabel.bottomAnchor, constant: padding / 2),
+            genresLabel.topAnchor.constraint(equalTo: voteCountLabel.bottomAnchor, constant: Metrics.small),
             
-            countryLabel.topAnchor.constraint(equalTo: genresLabel.bottomAnchor, constant: padding / 2),
+            countryLabel.topAnchor.constraint(equalTo: genresLabel.bottomAnchor, constant: Metrics.small),
             
-            durationLabel.topAnchor.constraint(equalTo: countryLabel.bottomAnchor, constant: padding / 2),
+            durationLabel.topAnchor.constraint(equalTo: countryLabel.bottomAnchor, constant: Metrics.small),
             
-            spokenLanguageLabel.topAnchor.constraint(equalTo: durationLabel.bottomAnchor, constant: padding / 2),
+            spokenLanguageLabel.topAnchor.constraint(equalTo: durationLabel.bottomAnchor, constant: Metrics.small),
 
-            castLabel.topAnchor.constraint(equalTo: spokenLanguageLabel.bottomAnchor, constant: padding),
+            castLabel.topAnchor.constraint(equalTo: spokenLanguageLabel.bottomAnchor, constant: Metrics.medium),
             
-            castCollectionView.topAnchor.constraint(equalTo: castLabel.bottomAnchor, constant: padding / 2),
+            castCollectionView.topAnchor.constraint(equalTo: castLabel.bottomAnchor, constant: Metrics.small),
             castCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             castCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             castCollectionView.heightAnchor.constraint(equalToConstant: 130),
             
             
-            producersLabel.topAnchor.constraint(equalTo: castCollectionView.bottomAnchor, constant: padding),
+            producersLabel.topAnchor.constraint(equalTo: castCollectionView.bottomAnchor, constant: Metrics.medium),
             
-            producersCollectionView.topAnchor.constraint(equalTo: producersLabel.bottomAnchor, constant: padding / 2),
+            producersCollectionView.topAnchor.constraint(equalTo: producersLabel.bottomAnchor, constant: Metrics.small),
             
             producersCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             producersCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             producersCollectionView.heightAnchor.constraint(equalToConstant: 90),
             
             
-            videosLabel.topAnchor.constraint(equalTo: producersCollectionView.bottomAnchor, constant: padding),
+            videosLabel.topAnchor.constraint(equalTo: producersCollectionView.bottomAnchor, constant: Metrics.medium),
             
-            videosCollectionView.topAnchor.constraint(equalTo: videosLabel.bottomAnchor, constant: padding / 2),
+            videosCollectionView.topAnchor.constraint(equalTo: videosLabel.bottomAnchor, constant: Metrics.small),
             
             videosCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             videosCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             videosCollectionView.heightAnchor.constraint(equalToConstant: 100),
             
             
-            imagesLabel.topAnchor.constraint(equalTo: videosCollectionView.bottomAnchor, constant: padding),
+            imagesLabel.topAnchor.constraint(equalTo: videosCollectionView.bottomAnchor, constant: Metrics.medium),
             
-            imagesCollectionView.topAnchor.constraint(equalTo: imagesLabel.bottomAnchor, constant: padding / 2),
+            imagesCollectionView.topAnchor.constraint(equalTo: imagesLabel.bottomAnchor, constant: Metrics.small),
             
             imagesCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             imagesCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
@@ -367,7 +365,7 @@ class ShowDetailsView: UIView {
             
             recommendationsLabel.topAnchor.constraint(equalTo: imagesCollectionView.bottomAnchor),
             
-            recommendationsCollectionView.topAnchor.constraint(equalTo:recommendationsLabel.bottomAnchor, constant: padding / 2 ),
+            recommendationsCollectionView.topAnchor.constraint(equalTo:recommendationsLabel.bottomAnchor, constant: Metrics.small),
             recommendationsCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             recommendationsCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             

@@ -157,7 +157,6 @@ class PersonDetailsView: UIView {
     }
     
     private func setupConstraints(){
-        let padding: CGFloat = 24
         
         scrollView.pinToEdges(of: self)
         
@@ -172,8 +171,8 @@ class PersonDetailsView: UIView {
             creditsLabel,
             photosLabel
         ].forEach {
-            $0.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: padding).isActive = true
-            $0.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -padding).isActive = true
+            $0.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Metrics.medium).isActive = true
+            $0.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Metrics.medium).isActive = true
         }
         
         NSLayoutConstraint.activate([
@@ -186,30 +185,30 @@ class PersonDetailsView: UIView {
             bannerImageView.widthAnchor.constraint(equalToConstant: 200),
             bannerImageView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             
-            titleLabel.topAnchor.constraint(equalTo: bannerImageView.bottomAnchor, constant: padding),
+            titleLabel.topAnchor.constraint(equalTo: bannerImageView.bottomAnchor, constant: Metrics.medium),
             
      
-            overviewLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: padding),
+            overviewLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: Metrics.medium),
 
             
-            detailsLabel.topAnchor.constraint(equalTo: overviewLabel.bottomAnchor, constant: padding),
+            detailsLabel.topAnchor.constraint(equalTo: overviewLabel.bottomAnchor, constant: Metrics.medium),
 
             
-            birthDateLabel.topAnchor.constraint(equalTo: detailsLabel.bottomAnchor, constant: padding / 2),
+            birthDateLabel.topAnchor.constraint(equalTo: detailsLabel.bottomAnchor, constant: Metrics.small),
 
             
-            placeBirthLabel.topAnchor.constraint(equalTo: birthDateLabel.bottomAnchor, constant: padding / 2),
+            placeBirthLabel.topAnchor.constraint(equalTo: birthDateLabel.bottomAnchor, constant: Metrics.small),
             
-            creditsLabel.topAnchor.constraint(equalTo: placeBirthLabel.bottomAnchor, constant: padding),
+            creditsLabel.topAnchor.constraint(equalTo: placeBirthLabel.bottomAnchor, constant: Metrics.medium),
             
-            creditsCollectionView.topAnchor.constraint(equalTo: creditsLabel.bottomAnchor, constant: padding / 2),
+            creditsCollectionView.topAnchor.constraint(equalTo: creditsLabel.bottomAnchor, constant: Metrics.small),
             creditsCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             creditsCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             
             
-            photosLabel.topAnchor.constraint(equalTo: creditsCollectionView.bottomAnchor, constant: padding),
+            photosLabel.topAnchor.constraint(equalTo: creditsCollectionView.bottomAnchor, constant: Metrics.medium),
             
-            imagesCollectionView.topAnchor.constraint(equalTo: photosLabel.bottomAnchor, constant: padding / 2),
+            imagesCollectionView.topAnchor.constraint(equalTo: photosLabel.bottomAnchor, constant: Metrics.small),
             imagesCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             imagesCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             imagesCollectionView.heightAnchor.constraint(equalToConstant: 250),

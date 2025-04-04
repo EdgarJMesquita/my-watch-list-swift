@@ -9,7 +9,7 @@ import UIKit
 import Lottie
 
 class ProfileView: UIView {
-    let padding: CGFloat = 24
+    
     
     lazy var avatarImageView: UIImageView = {
         let imageView = UIImageView()
@@ -64,13 +64,13 @@ class ProfileView: UIView {
             avatarImageView.widthAnchor.constraint(equalToConstant: 150),
             avatarImageView.centerXAnchor.constraint(equalTo: centerXAnchor),
             
-            titleLabel.topAnchor.constraint(equalTo: avatarImageView.bottomAnchor, constant: padding),
-            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor,constant: padding),
-            titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor,constant: -padding),
+            titleLabel.topAnchor.constraint(equalTo: avatarImageView.bottomAnchor, constant: Metrics.medium),
+            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor,constant: Metrics.medium),
+            titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor,constant: -Metrics.medium),
             
-            actionButton.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -24),
-            actionButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24),
-            actionButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -24),
+            actionButton.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -Metrics.medium),
+            actionButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Metrics.medium),
+            actionButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Metrics.medium),
             actionButton.heightAnchor.constraint(equalToConstant: 40)
         ])
     }

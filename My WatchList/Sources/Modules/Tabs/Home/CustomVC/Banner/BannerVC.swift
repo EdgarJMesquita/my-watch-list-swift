@@ -12,6 +12,7 @@ class BannerVC: UIViewController {
     
     let viewModel: BannerViewModel
     weak var delegate: BannerDelegate?
+    weak var flowDelegate: TabBarFlowDelegate?
     let currentIndex: Int
     
     
@@ -64,10 +65,11 @@ class BannerVC: UIViewController {
     }()
     
     
-    init(viewModel: BannerViewModel, currentIndex: Int, delegate: BannerDelegate? = nil) {
+    init(viewModel: BannerViewModel, currentIndex: Int, delegate: BannerDelegate, flowDelegate: TabBarFlowDelegate? = nil) {
         self.viewModel = viewModel
         self.delegate = delegate
         self.currentIndex = currentIndex
+        self.flowDelegate = flowDelegate
         super.init(nibName: nil, bundle: nil)
         viewModel.delegate = self
     }
@@ -130,7 +132,6 @@ class BannerVC: UIViewController {
     
     
     private func setupConstraints() {
-        let padding: CGFloat = 24
         let stackButtonHeight: CGFloat = 48
         
         let bannerHeight: CGFloat = 430
@@ -145,7 +146,7 @@ class BannerVC: UIViewController {
             stackButton.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             stackButton.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             stackButton.heightAnchor.constraint(equalToConstant: stackButtonHeight),
-            stackButton.bottomAnchor.constraint(equalTo: bannerImageView.bottomAnchor, constant: -24),
+            stackButton.bottomAnchor.constraint(equalTo: bannerImageView.bottomAnchor, constant: -Metrics.medium),
         ])
     }
     
@@ -162,8 +163,7 @@ class BannerVC: UIViewController {
     @objc
     private func didTapWatchList(){
         if PersistenceManager.getSessionId() == nil {
-            let viewController = MWLLoginVC()
-            present(viewController, animated: true)
+            flowDelegate?.presentLogin()
         } else {
             viewModel.toogleWatchList()
         }

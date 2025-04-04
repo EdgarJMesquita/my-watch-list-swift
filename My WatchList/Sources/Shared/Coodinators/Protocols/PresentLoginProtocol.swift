@@ -9,4 +9,6 @@ import Foundation
 
 protocol PresentLoginProtocol: AnyObject {
     func presentLogin()
+    func presentLoginSuccess(username: String)
+    func presentLoginFailure()
 }

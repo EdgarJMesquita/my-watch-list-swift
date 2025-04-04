@@ -58,7 +58,8 @@ class HomeVC: MWLDataLoadingVC {
             childVC: BannerVC(
                 viewModel: BannerViewModel(),
                 currentIndex: currentIndex,
-                delegate: self
+                delegate: self,
+                flowDelegate: flowDelegate
             ),
             to: contentView.bannerContainer
         )

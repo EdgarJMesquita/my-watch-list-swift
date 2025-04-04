@@ -65,12 +65,6 @@ class MWLUsersMediaListVC: MWLBaseViewController {
     
     private func loadFavorites(){
         viewModel.loadData()
-      
-        if viewModel.isLogged {
-            dismissLoginView()
-        } else {
-            showLoginView()
-        }
     }
     
     private func setup(){
@@ -88,10 +82,8 @@ class MWLUsersMediaListVC: MWLBaseViewController {
     
     
     override func updateContentUnavailableConfiguration(using state: UIContentUnavailableConfigurationState) {
-        if viewModel.isLogged == false {
-            contentUnavailableConfiguration = nil
-        }
-        else if isLoading {
+   
+        if isLoading {
             contentUnavailableConfiguration = UIContentUnavailableConfiguration.loading()
         }
         
@@ -179,7 +171,6 @@ extension MWLUsersMediaListVC: MWLUsersMediaViewModelDelegate {
             isLoading = false
             setNeedsUpdateContentUnavailableConfiguration()
             updateData(on: viewModel.activeItems)
-            dismissLoginView()
         }
     }
     func didGetUnauthorized() {

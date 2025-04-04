@@ -10,7 +10,6 @@ import Hero
 
 class MWLFlowCoordinator {
     var navigationController: UINavigationController?
-    
     let viewControllerFactory: ViewControllersFactory
     var tabBarController: MWLTabBarController?
     
@@ -30,17 +29,6 @@ class MWLFlowCoordinator {
         return navigationController
     }
     
-    func presentLoginSuccess(username: String){
-        let viewController = viewControllerFactory.makeSuccessLoginVC(username: username)
-        navigateToHome()
-        navigationController?.present(viewController, animated: true)
-    }
-    
-    func presentLoginFailure(){
-        let alertController = UIAlertController(title: "Oups", message: "We couln't log you in.", preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: "Ok", style: .default))
-        navigationController?.present(alertController, animated: true)
-    }
 }
 
 extension MWLFlowCoordinator: SplashFlowDelegate {
@@ -106,13 +94,7 @@ extension MWLFlowCoordinator: FullScreenImageProtocol {
     }
 }
 
-extension MWLFlowCoordinator: GoBackFlowProtocol {
-    func goBack() {
-        navigationController?.popViewController(animated: true)
-    }
-}
-
-
+// MARK: DetailsNavigation
 extension MWLFlowCoordinator: PersonDetailsFlowDelegate, ShowDetailsFlowDelegate, TabBarFlowDelegate {
     func navigateToTabBarHome() {
         tabBarController?.setSelectedIndex(index: 0)
@@ -122,24 +104,35 @@ extension MWLFlowCoordinator: PersonDetailsFlowDelegate, ShowDetailsFlowDelegate
         tabBarController?.setSelectedIndex(index: 1)
     }
     
-    func navigateToTabBarProfile() {
-        tabBarController?.setSelectedIndex(index: 4)
-    }
-    
     func navigateToRatedListPageView() {
         let viewController = viewControllerFactory.makeRatedListPageViewVC(flowDelegate: self)
         navigationController?.pushViewController(viewController, animated: true)
     }
 }
 
-
+// MARK: Auth
 extension MWLFlowCoordinator: PresentLoginProtocol {
     func presentLogin() {
-        let viewController = viewControllerFactory.makeLoginVC()
+        let viewController = viewControllerFactory.makeLoginVC(flowDelegate: self)
         navigationController?.present(viewController, animated: true)
+    }
+    
+    func presentLoginSuccess(username: String){
+        let viewController = viewControllerFactory.makeSuccessLoginVC(username: username)
+        print("presentLoginSuccess")
+        navigateToHome()
+        navigationController?.dismiss(animated: false)
+        navigationController?.present(viewController, animated: true)
+    }
+    
+    func presentLoginFailure(){
+        let alertController = UIAlertController(title: "Oops", message: "We couln't log you in.", preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "Ok", style: .default))
+        navigationController?.present(alertController, animated: true)
     }
 }
 
+// MARK: Utils
 extension MWLFlowCoordinator: ResetAppProtocol {
     func resetApp() {
         tabBarController = viewControllerFactory.makeTabBarVC(flowDelegate: self, previousIndex: 1)

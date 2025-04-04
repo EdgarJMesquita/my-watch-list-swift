@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import AuthenticationServices
 
 class ProfileVC: MWLBaseViewController {
     let contentView: ProfileView
@@ -31,17 +30,8 @@ class ProfileVC: MWLBaseViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-  
         viewModel.loadData()
-        
-        if viewModel.isLogged {
-            dismissLoginView()
-            showLoadingView()
-            setupLogout()
-        } else {
-            showLoginView()
-        }
-        
+        showLoadingView()
     }
     
     private func setup(){
@@ -49,6 +39,7 @@ class ProfileVC: MWLBaseViewController {
         setupContentViewToBounds(contentView: contentView)
         view.backgroundColor = .mwlBackground
         setupButtonAction()
+        setupLogout()
     }
     
     private func setupButtonAction(){
@@ -73,10 +64,6 @@ class ProfileVC: MWLBaseViewController {
         }
     }
     
-    @objc
-    private func authenticate(){
-        viewModel.authenticate(delegate: self)
-    }
     
     private func setupLogout(){
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Exit", style: .plain, target: self, action: #selector(didTapLogout))
@@ -110,12 +97,8 @@ extension ProfileVC: ProfileViewModelDelegate {
     }
 }
 
+
 #Preview {
     ProfileVC(contentView: ProfileView(), viewModel: ProfileViewModel())
 }
 
-extension ProfileVC: ASWebAuthenticationPresentationContextProviding {
-    func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
-        view.window!
-    }
-}

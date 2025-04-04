@@ -28,20 +28,36 @@ class MWLTabBarController: UITabBarController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setup()
+        handleAuth()
+    }
+    
+    private func setup(){
         tabBar.barTintColor = .mwlSurface
         tabBar.isTranslucent = false
         tabBar.tintColor = .mwlPrimary
         tabBar.unselectedItemTintColor = .white
         tabBar.barStyle = .default
-        viewControllers = [
-            createHomeNC(),
-            createSearchNC(),
-            createFavoritesNC(),
-            createWatchListNC(),
-            createProfileNC()
-        ]
     }
     
+    private func handleAuth(){
+        if PersistenceManager.getSessionId() == nil {
+            viewControllers = [
+                createHomeNC(),
+                createSearchNC(),
+                createLoginNC()
+            ]
+        } else {
+            viewControllers = [
+                createHomeNC(),
+                createSearchNC(),
+                createFavoritesNC(),
+                createWatchListNC(),
+                createProfileNC()
+            ]
+        }
+     
+    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -92,6 +108,15 @@ class MWLTabBarController: UITabBarController {
         profileVC.tabBarItem = UITabBarItem(title: "Profile", image: .mwlProfile, tag: 4)
         setupTabBarItemStyle(to: profileVC)
         return UINavigationController(rootViewController: profileVC)
+    }
+    
+    private func createLoginNC() -> UIViewController {
+        let loginVC = LoginVC(contentView: LoginView(), viewModel: LoginViewModel(), flowDelegate: flowDelegate)
+        loginVC.flowDelegate = flowDelegate
+        loginVC.title = "Profile"
+        loginVC.tabBarItem = UITabBarItem(title: "Profile", image: .mwlProfile, tag: 4)
+        setupTabBarItemStyle(to: loginVC)
+        return UINavigationController(rootViewController: loginVC)
     }
     
 

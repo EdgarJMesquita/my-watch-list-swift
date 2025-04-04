@@ -92,7 +92,6 @@ class MWLSuccessLoginVC: UIViewController {
     
     
     private func setupConstraints(){
-        let padding: CGFloat = 48
         
         NSLayoutConstraint.activate([
             successAnimationView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -100,16 +99,16 @@ class MWLSuccessLoginVC: UIViewController {
             successAnimationView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             successAnimationView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
-            titleLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -50),
-            titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor,constant: padding),
-            titleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding),
+            titleLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -Metrics.large),
+            titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Metrics.large),
+            titleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Metrics.large),
             
             
             usernameLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor),
             usernameLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
             usernameLabel.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor),
             
-            actionButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -padding),
+            actionButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -Metrics.large),
             actionButton.leadingAnchor.constraint(equalTo: usernameLabel.leadingAnchor),
             actionButton.trailingAnchor.constraint(equalTo: usernameLabel.trailingAnchor),
             actionButton.heightAnchor.constraint(equalToConstant: 40)

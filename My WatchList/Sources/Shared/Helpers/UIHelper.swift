@@ -12,30 +12,30 @@ enum UIHelper {
     
     static func createThreeTableColumnFlowLayout(in view:UIView) -> UICollectionViewFlowLayout {
         let width = UIScreen.main.bounds.width
-        let padding: CGFloat = 12
+    
         let minimumItemSpacing: CGFloat = 10
-        let availableWidth = width - (padding * 2) - (minimumItemSpacing * 2)
+        let availableWidth = width - (Metrics.small * 2) - (minimumItemSpacing * 2)
         let itemWidth = availableWidth / 3
         
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.scrollDirection = .vertical
         
-        flowLayout.sectionInset = UIEdgeInsets(top: padding, left: padding, bottom: padding, right: padding)
-        flowLayout.itemSize = CGSize(width: itemWidth, height: itemWidth / 0.7 + padding)
+        flowLayout.sectionInset = UIEdgeInsets(top: Metrics.small, left: Metrics.small, bottom: Metrics.small, right: Metrics.small)
+        flowLayout.itemSize = CGSize(width: itemWidth, height: itemWidth / 0.7 + Metrics.small)
         
         return flowLayout
     }
     
     static func createOneTableColumnFlowLayout() -> UICollectionViewFlowLayout {
         let width = UIScreen.main.bounds.width
-        let padding: CGFloat = 12
+
         let minimumItemSpacing: CGFloat = 10
-        let availableWidth = width - (padding * 2)
+        let availableWidth = width - (Metrics.small * 2)
         
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.scrollDirection = .vertical
         
-        flowLayout.sectionInset = UIEdgeInsets(top: padding, left: padding, bottom: padding, right: padding)
+        flowLayout.sectionInset = UIEdgeInsets(top: Metrics.small, left: Metrics.small, bottom: Metrics.small, right: Metrics.small)
         flowLayout.itemSize = CGSize(width: availableWidth, height: 100)
         
         return flowLayout
