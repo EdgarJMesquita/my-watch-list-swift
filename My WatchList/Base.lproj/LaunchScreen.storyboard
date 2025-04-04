@@ -25,7 +25,7 @@
                             </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
-                        <color key="backgroundColor" name="MWLBackground"/>
+                        <color key="backgroundColor" name="MWLSurface"/>
                         <constraints>
                             <constraint firstItem="gTO-uO-ung" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="Zt2-DB-z3w"/>
                             <constraint firstItem="gTO-uO-ung" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="wFr-0L-shd"/>
@@ -38,9 +38,9 @@
         </scene>
     </scenes>
     <resources>
-        <image name="MWLLogo" width="422" height="442"/>
-        <namedColor name="MWLBackground">
-            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        <image name="MWLLogo" width="185.03999328613281" height="133.39999389648438"/>
+        <namedColor name="MWLSurface">
+            <color red="0.011764705882352941" green="0.14509803921568626" blue="0.25490196078431371" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
     </resources>
 </document>

@@ -12,13 +12,25 @@ import Foundation
 protocol ViewControllersFactoryProtocol: AnyObject {
     func makeSplashVC(flowDelegate: SplashFlowDelegate) -> SplashVC
 
-    func makeTabBarVC(flowDelegate: TabBarFlowDelegate) -> MWLTabBarController
+    func makeTabBarVC(flowDelegate: TabBarFlowDelegate, previousIndex: Int) -> MWLTabBarController
     
-    func makeDetailsVC(flowDelegate: ShowDetailsFlowDelegate, show: Show) -> ShowDetailsVC
+    func makeDetailsVC(
+        flowDelegate: ShowDetailsFlowDelegate,
+        id: Int,
+        posterPath: String?,
+        type: TMDBType,
+        previousIndex: Int
+    ) -> ShowDetailsVC
     
-    func makePersonDetailsVC(flowDelegate: PersonDetailsFlowDelegate, personId: Int) -> PersonDetailsVC
+    func makePersonDetailsVC(flowDelegate: PersonDetailsFlowDelegate, personId: Int, profilePath: String?, previousIndex: Int) -> PersonDetailsVC
     
     func makeVideoPlayerVC(video: Video) -> VideoPlayerVC
     
     func makeFullScreenImageVC(imagePath: String) -> FullScreenImageViewVC
+    
+    func makeSuccessLoginVC(username: String) -> MWLSuccessLoginVC
+    
+    func makeLoginVC(flowDelegate: TabBarFlowDelegate) -> LoginVC
+    
+    func makeRatedListPageViewVC(flowDelegate: TabBarFlowDelegate) -> RatedListPageViewVC
 }

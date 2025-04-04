@@ -24,9 +24,46 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window.rootViewController = rootViewController
         self.window = window
         window.makeKeyAndVisible()
-
     }
 
+    func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+        
+//        do {
+//            guard
+//                let url = URLContexts.first?.url,
+//                let params = url.getQueryparams()
+//            else {
+//                throw MWLError.invalidURL
+//            }
+//            
+//            guard
+//                params["approved"] == "true",
+//                let requestToken = params["request_token"]
+//            else {
+//                throw MWLError.invalidURL
+//            }
+//            
+//            Task {
+//                do {
+//                    try await AuthService.fetchSessionId(requestToken: requestToken)
+//                    let accountDetails = try await AuthService().getAccountDetails()
+//                    let username = accountDetails.name.isEmpty ? accountDetails.username : accountDetails.name
+//                    
+//                    flowController?.presentLoginSuccess(username: username ?? "My friend")
+//                    
+//                } catch {
+//                    flowController?.presentLoginFailure()
+//                    print(error.localizedDescription)
+//                }
+//            }
+//            
+//        } catch {
+//            flowController?.presentLoginFailure()
+//            print(error.localizedDescription)
+//        }
+        
+    }
+    
     func sceneDidDisconnect(_ scene: UIScene) {
         // Called as the scene is being released by the system.
         // This occurs shortly after the scene enters the background, or when its session is discarded.

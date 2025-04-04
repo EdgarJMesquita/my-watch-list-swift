@@ -7,7 +7,5 @@
 
 import UIKit
 
-protocol ShowDetailsFlowDelegate: AnyObject, FullScreenImageDelegate, PersonDetailsFlowDelegate {
-    func presentPersonDetails(for personId: Int, with viewController: UIViewController)
-    func presentVideoPlayer(for video: Video, with viewController: UIViewController)
+protocol ShowDetailsFlowDelegate: AnyObject, FullScreenImageProtocol, PresentPersonDetailsProtocol, PresentShowDetailsProtocol, PresentVideoPlayerProtocol, PresentLoginProtocol {
 }

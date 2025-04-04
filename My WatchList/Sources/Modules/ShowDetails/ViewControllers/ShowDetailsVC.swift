@@ -6,21 +6,45 @@
 //
 
 import UIKit
+import Hero
 
 class ShowDetailsVC: UIViewController {
     private let contentView: ShowDetailsView
-    private let show: Show
+    private let id: Int
+    private let posterPath: String?
+    private let type: TMDBType
     private let viewModel: ShowDetailsViewModel
     weak var flowDelegate: ShowDetailsFlowDelegate?
+    let previousIndex: Int
     
-    init(contentView: ShowDetailsView, show: Show, viewModel: ShowDetailsViewModel, flowDelegate: ShowDetailsFlowDelegate? = nil) {
-        self.show = show
+    init(
+        contentView: ShowDetailsView,
+        id: Int,
+        posterPath: String?,
+        type: TMDBType,
+        viewModel: ShowDetailsViewModel,
+        flowDelegate: ShowDetailsFlowDelegate? = nil,
+        previousIndex: Int
+    ) {
+      
         self.contentView = contentView
         self.viewModel = viewModel
         self.flowDelegate = flowDelegate
+        self.previousIndex = previousIndex
+        self.id = id
+        self.posterPath = posterPath
+        self.type = type
         super.init(nibName: nil, bundle: nil)
         viewModel.delegate = self
         contentView.castCollectionView.customDelegate = self
+        
+        self.hero.isEnabled = true
+        
+        if let posterPath = posterPath {
+            self.contentView.bannerImageView.hero.id = "\(previousIndex)\(posterPath)"
+        }
+      
+        setupBanner()
     }
     
     required init?(coder: NSCoder) {
@@ -31,51 +55,27 @@ class ShowDetailsVC: UIViewController {
         super.viewDidLoad()
         setup()
         loadData()
-        setupNavigationItem()
-     
     }
     
-    private func setupNavigationItem(){
-        navigationController?.isNavigationBarHidden = true
-        
-//        let favoriteButton = UIBarButtonItem(
-//            image: UIImage(systemName: "star"),
-//            style: .done,
-//            target: self,
-//            action: #selector(dismissVC)
-//        )
-//        navigationItem.rightBarButtonItem = favoriteButton
-//        
-//        let closeButton = UIBarButtonItem(
-//            barButtonSystemItem: .close,
-//            target: self,
-//            action: #selector(dismissVC)
-//        )
-//        
-//        navigationItem.leftBarButtonItem = closeButton
-        
-    }
-    
-    @objc
-    private func dismissVC(){
-        dismiss(animated: true)
+    private func setupNavigationItem(title: String){
+        navigationItem.backButtonTitle = title
     }
     
     private func setup() {
         view.backgroundColor = .mwlBackground
         view.addSubview(contentView)
         setupContentViewToBounds(contentView: contentView, safe: false)
+        configureButtonActions()
     }
     
     private func setupBanner(){
         Task {
             guard
-                let posterPath = show.posterPath,
+                let posterPath = posterPath,
                 let image = await ImageService.shared.downloadTMDBImage(path: posterPath)
             else {
                 return
             }
-            
             contentView.bannerImageView.image = image
             contentView.bannerImageView.addFadingFooter()
             
@@ -83,14 +83,104 @@ class ShowDetailsVC: UIViewController {
     }
     
     private func loadData(){
-        setupBanner()
-        viewModel.loadData(for: show)
+        viewModel.loadData(id: id, type: type)
+    }
+    
+    private func setupFavorite(isFavorite: Bool){
+        let imageIcon = isFavorite ? UIImage(systemName: "heart.fill") : UIImage(systemName: "heart")
+        
+        
+        let favoriteButton = UIBarButtonItem(image: imageIcon, style: .plain, target: self, action: #selector(didTapFavorite))
+
+        favoriteButton.tintColor = .red
+        
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            navigationItem.rightBarButtonItem = favoriteButton
+        }
+        
+    }
+    
+    @objc
+    private func didTapFavorite(){
+        viewModel.toogleFavorite()
+    }
+    
+    private func configureButtonActions(){
+        contentView.wishListButton.addTarget(
+            self,
+            action: #selector(didTapWatchList),
+            for: .touchUpInside
+        )
+        contentView.rateButton.addTarget(
+            self,
+            action: #selector(didTapRatingButton),
+            for: .touchUpInside
+        )
+    }
+    
+    private func setupWatchListButton(isWatchList: Bool){
+        let buttonTitle = isWatchList ? "- WatchList" : "+ WatchList"
+        DispatchQueue.main.async { [weak self] in
+            self?.contentView.wishListButton.setTitle(buttonTitle, for: .normal)
+        }
+    }
+    
+    @objc
+    private func didTapWatchList(){
+        if PersistenceManager.getSessionId() == nil {
+            flowDelegate?.presentLogin()
+        } else {
+            viewModel.toogleWatchList()
+        }
+    }
+    
+    private func setupRatingBottom(rate: Float?){
+        if let rate {
+            DispatchQueue.main.async { [weak self] in
+                guard let self else {return}
+                let title = "\(rate)"
+                let image = UIImage(systemName: "star.fill")
+                contentView.rateButton.setImage(image, for: .normal)
+                contentView.rateButton.setTitle(" \(title)", for: .normal)
+                contentView.tintColor = .white
+            }
+        } else {
+            DispatchQueue.main.async { [weak self] in
+                guard let self else {return}
+                contentView.rateButton.setTitle("Give a rate", for: .normal)
+                contentView.rateButton.setImage(nil, for: .normal)
+            }
+        }
+    }
+    
+    @objc
+    private func didTapRatingButton(){
+        if PersistenceManager.getSessionId() == nil {
+            flowDelegate?.presentLogin()
+        } else {
+            let title = "Add rating to\"\(viewModel.details?.getTitle() ?? "Unknown")\""
+            let viewController = RatingVC(
+                contentView: RatingView(),
+                title: title,
+                initialValue: viewModel.rate ?? 0.0,
+                showDelete: viewModel.rate != nil
+            )
+            viewController.delegate = self
+            present(viewController, animated: true)
+        }
     }
     
     private func setupDetails(){
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
-            setupTexts()
+            setupTitle()
+            setupOverview()
+            setupVoteCount()
+            setupGenres()
+            setupCountries()
+            setupDuration()
+            setupSpokenLanguages()
             setupCast()
             setupProducers()
             setupImages()
@@ -100,40 +190,17 @@ class ShowDetailsVC: UIViewController {
         }
     }
     
-    private func setupTexts(){
+    private func setupTitle(){
         let title = viewModel.details?.getTitle() ?? "Unknown"
         let year = viewModel.details?.releaseDate?.dateFormat(.dateTime.year()) ?? "Unknown"
         contentView.titleLabel.text = "\(title) (\(year))"
         contentView.overviewLabel.text = viewModel.details?.overview
-        
-        let genresString = viewModel.details?.genres.map { $0.name }.joined(separator: ", ")
-        contentView.genresLabel.text = "Genre: \(genresString ?? "")"
-        
-        let countryString = viewModel.details?.originCountry.joined(separator: ", ")
-        contentView.countryLabel.text = "Country: \(countryString ?? "")"
-        
-        if let durationInMinutes = viewModel.details?.runtime {
-            let hours = durationInMinutes / 60
-            let minutes = durationInMinutes % 60
-        
-            var runtime = "Duration: "
-            
-            if(hours > 0){
-                runtime += "\(hours)h "
-            }
-            if(minutes > 0){
-                runtime += "\(minutes)m "
-            }
-            
-            contentView.durationLabel.text = runtime
-        }
-        
-        if let spokenLanguages = viewModel.details?.spokenLanguages {
-            contentView.spokenLanguageLabel.text = "Languages: " + spokenLanguages.map {
-                $0.englishName
-            }.joined(separator: ", ")
-        }
-        
+        setupNavigationItem(title: title)
+    }
+    
+    private func setupOverview(){
+        contentView.overviewLabel.text = viewModel.details?.overview
+
         if contentView.overviewLabel.isTruncated() {
             contentView.overviewLabel.isUserInteractionEnabled = true
             let tapRecognizer = UITapGestureRecognizer(
@@ -143,6 +210,54 @@ class ShowDetailsVC: UIViewController {
             contentView.overviewLabel.addGestureRecognizer(tapRecognizer)
         }
         
+    }
+    
+    private func setupGenres(){
+        let genresString = viewModel.details?.genres.map { $0.name }.joined(separator: ", ")
+        contentView.genresLabel.text = "Genre: \(genresString ?? "")"
+    }
+    
+    private func setupVoteCount(){
+        guard let voteCount = viewModel.details?.voteAverage else {
+            return
+        }
+        contentView.voteCountLabel.text = "Average: \(voteCount)"
+    }
+    
+    private func setupCountries(){
+        let countryString = viewModel.details?.originCountry.joined(separator: ", ")
+        contentView.countryLabel.text = "Country: \(countryString ?? "")"
+    }
+    
+    private func setupDuration(){
+        guard let durationInMinutes = viewModel.details?.runtime else {
+            contentView.durationLabel.text = "Duration: Unknown"
+            return
+        }
+        let hours = durationInMinutes / 60
+        let minutes = durationInMinutes % 60
+    
+        var runtime = "Duration: "
+        
+        if(hours > 0){
+            runtime += "\(hours)h "
+        }
+        if(minutes > 0){
+            runtime += "\(minutes)m "
+        }
+        
+        contentView.durationLabel.text = runtime
+    }
+    
+    private func setupSpokenLanguages(){
+        guard let spokenLanguages = viewModel.details?.spokenLanguages else {
+            contentView.spokenLanguageLabel.text = "Languages: Unknown"
+            return
+        }
+    
+        let spokenLanguageText = spokenLanguages.map { $0.englishName }.joined(separator: ", ")
+        
+        contentView.spokenLanguageLabel.text = "Languages: \(spokenLanguageText) "
     }
     
     private func setupCast(){
@@ -159,7 +274,7 @@ class ShowDetailsVC: UIViewController {
     
     private func setupVideos(){
         guard 
-            let videos = viewModel.details?.videos.results,
+            let videos = viewModel.details?.videos?.results,
             videos.count > 0
         else {
             contentView.videosCollectionView.showEmptyMessage()
@@ -218,14 +333,27 @@ class ShowDetailsVC: UIViewController {
 }
 
 extension ShowDetailsVC: DetailsViewModelDelegate {
+    func didLoadStates(isWatchList: Bool) {
+        setupWatchListButton(isWatchList: isWatchList)
+    }
+    
+    func didLoadStates(isFavorite: Bool) {
+        setupFavorite(isFavorite: isFavorite)
+    }
+    
     func detailsDidLoad() {
         setupDetails()
     }
+    
+    func didLoadStates(rate: Float?) {
+        setupRatingBottom(rate: rate)
+    }
+    
 }
 
 extension ShowDetailsVC: MWLCastCollectionViewDelegate {
-    func didSelectCast(personId: Int) {
-        flowDelegate?.presentPersonDetails(for: personId, with: self)
+    func didSelectCast(personId: Int, profilePath: String?) {
+        flowDelegate?.presentPersonDetails(for: personId, profilePath: profilePath)
     }
 }
 
@@ -242,15 +370,28 @@ extension ShowDetailsVC: MWLImagesCollectionViewDelegate {
 }
 
 extension ShowDetailsVC: MWLCredtisCollectionViewDelegate {
-    func didTapShow(show: Show) {
-        flowDelegate?.presentShowDetailsDetails(show: show, with: self)
+    func didTapShow(show: Media) {
+        flowDelegate?.presentShowDetails(id: show.id, posterPath: show.posterPath, type: show.getType())
+    }
+}
+
+extension ShowDetailsVC: RatingVCDelegate {
+    func didTapRate(rate: Float) {
+        viewModel.rateMovie(rate: rate)
+    }
+    
+    func didTapDelete() {
+        viewModel.deleteRate()
     }
 }
 
 #Preview {
     ShowDetailsVC(
-        contentView: ShowDetailsView(), 
-        show: Show.buildMock(),
-        viewModel: ShowDetailsViewModel()
+        contentView: ShowDetailsView(previousIndex: 1),
+        id: 1126166,
+        posterPath: "/gFFqWsjLjRfipKzlzaYPD097FNC.jpg",
+        type: .movie,
+        viewModel: ShowDetailsViewModel(),
+        previousIndex: 1
     )
 }

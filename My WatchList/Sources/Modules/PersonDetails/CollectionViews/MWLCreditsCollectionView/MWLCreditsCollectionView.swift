@@ -8,10 +8,13 @@
 import UIKit
 
 class MWLCreditsCollectionView: UICollectionView {
-    private var shows: [Show] = []
+    private var shows: [Media] = []
     weak var customDelegate: MWLCredtisCollectionViewDelegate?
+    private let currentIndex: Int
     
-    init(){
+    
+    init(currentIndex: Int){
+        self.currentIndex = currentIndex
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.itemSize = CGSize(width: 120, height: 193)
@@ -21,15 +24,15 @@ class MWLCreditsCollectionView: UICollectionView {
         super.init(frame: .zero, collectionViewLayout: layout)
         
         showsHorizontalScrollIndicator = false
-        register(MovieCell.self, forCellWithReuseIdentifier: MovieCell.identifier)
+        register(ShowCollectionViewCell.self, forCellWithReuseIdentifier: ShowCollectionViewCell.identifier)
         translatesAutoresizingMaskIntoConstraints = false
         dataSource = self
         delegate = self
-
+        
         setupConstraints()
     }
     
-    func configure(with shows: [Show]){
+    func configure(with shows: [Media]){
         self.shows = shows
         reloadData()
     }
@@ -47,10 +50,6 @@ class MWLCreditsCollectionView: UICollectionView {
 
 
 extension MWLCreditsCollectionView: UICollectionViewDataSource {
- 
-//    func numberOfSections(in collectionView: UICollectionView) -> Int {
-//        shows.count
-//    }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         shows.count
@@ -58,14 +57,14 @@ extension MWLCreditsCollectionView: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCell.identifier, for: indexPath) as? MovieCell
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ShowCollectionViewCell.identifier, for: indexPath) as? ShowCollectionViewCell
         else {
             return UICollectionViewCell()
         }
         
         let show = shows[indexPath.item]
         
-        cell.configure(with: show)
+        cell.configure(with: show, currentIndex: currentIndex)
         
         return cell
     }
@@ -80,5 +79,5 @@ extension MWLCreditsCollectionView: UICollectionViewDelegate {
 }
 
 protocol MWLCredtisCollectionViewDelegate: AnyObject {
-    func didTapShow(show: Show)
+    func didTapShow(show: Media)
 }

@@ -8,5 +8,5 @@
 import Foundation
 
 protocol MovieListDelegate: AnyObject {
-    func movieDidTap(show: Show)
+    func movieDidTap(show: Media)
 }

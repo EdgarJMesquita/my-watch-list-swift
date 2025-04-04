@@ -8,12 +8,14 @@
 import UIKit
 
 class MWLSegmentedFilter: UIView {
-    private let filters: [String] = ["All", "Trending", "Popular"]
-
+    private let filters: [String]
+    
     private var chips: [UIButton] = []
-
-    private var currentFilter = "All"
-
+    
+    
+    
+    weak var delegate: MWLSegmentedFilterDelegate?
+    
     private lazy var stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .horizontal
@@ -24,15 +26,21 @@ class MWLSegmentedFilter: UIView {
         stackView.layer.cornerRadius = 16
         stackView.layer.masksToBounds = true
         stackView.spacing = 12
-
+        
         addBlueEffect(to: stackView)
         return stackView
     }()
-
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    
+    init(filters: [String]){
+        self.filters = filters
+        super.init(frame: .zero)
         setupUI()
     }
+    
+//    override init(frame: CGRect) {
+//        super.init(frame: frame)
+//        
+//    }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -77,6 +85,7 @@ class MWLSegmentedFilter: UIView {
     @objc
     func didTapFilter(_ button: UIButton) {
         setSelected(at: button.tag)
+        delegate?.didTap(index: button.tag, name: filters[button.tag])
     }
 
     private func setButtonTitleColor(color: UIColor, to button: UIButton) {
@@ -144,6 +153,10 @@ class MWLSegmentedFilter: UIView {
     }
 }
 
+protocol MWLSegmentedFilterDelegate: AnyObject {
+    func didTap(index: Int, name: String)
+}
+
 #Preview {
-    HomeVC(contentView: HomeView())
+    HomeVC(contentView: HomeView(),previousIndex: 1)
 }

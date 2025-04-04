@@ -8,6 +8,7 @@
 import UIKit
 
 class ShowDetailsView: UIView {
+    private let previousIndex: Int
     
     lazy var activityIndicator: UIActivityIndicatorView = {
         let activityIndicator = UIActivityIndicatorView(style: .large)
@@ -17,10 +18,10 @@ class ShowDetailsView: UIView {
         return activityIndicator
     }()
     
-    
     lazy var bannerImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.addFadingFooter()
         return imageView
     }()
     
@@ -36,7 +37,18 @@ class ShowDetailsView: UIView {
         return view
     }()
     
-    private lazy var wishListButton: UIButton = {
+    private lazy var stackButton: UIStackView = {
+        let stack = UIStackView()
+        stack.spacing = 8
+        stack.axis = .horizontal
+        stack.distribution = .fillEqually
+        stack.layoutMargins = UIEdgeInsets(top: 0, left: 24, bottom: 0, right: 24)
+        stack.isLayoutMarginsRelativeArrangement = true
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        return stack
+    }()
+    
+    lazy var wishListButton: UIButton = {
         let button = UIButton()
         
         button.setTitle("Wishlist", for: .normal)
@@ -45,11 +57,14 @@ class ShowDetailsView: UIView {
         button.titleLabel?.font =  UIFont.systemFont(ofSize: 16, weight: .semibold)
         button.layer.cornerRadius = 8
         button.layer.masksToBounds = true
-        button.setImage(UIImage(systemName: "plus"), for: .normal)
-        button.imageView?.tintColor = .white
-        button.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 12)
         button.translatesAutoresizingMaskIntoConstraints = false
         
+        return button
+    }()
+    
+    lazy var rateButton: MWLButton = {
+        let button = MWLButton(title: "Give a rate", backgroundColor: .mwlPrimary)
+        button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
@@ -118,6 +133,15 @@ class ShowDetailsView: UIView {
         return label
     }()
     
+    lazy var voteCountLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 0
+        label.textColor = .mwlGray
+        label.font = UIFont.systemFont(ofSize: 16, weight: .regular)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     private lazy var castLabel: UILabel = {
         let label = UILabel()
         label.text = "Cast"
@@ -129,7 +153,7 @@ class ShowDetailsView: UIView {
     
     
     lazy var castCollectionView: MWLCastCollectionView = {
-        MWLCastCollectionView()
+        MWLCastCollectionView(currentIndex: previousIndex + 1)
     }()
     
     lazy var producersLabel: UILabel = {
@@ -184,11 +208,12 @@ class ShowDetailsView: UIView {
     }()
     
     lazy var recommendationsCollectionView: MWLCreditsCollectionView = {
-        let collectionView = MWLCreditsCollectionView()
+        let collectionView = MWLCreditsCollectionView(currentIndex: previousIndex + 1)
         return collectionView
     }()
 
-    init() {
+    init(previousIndex: Int) {
+        self.previousIndex = previousIndex
         super.init(frame: .zero)
         setupUI()
         setupLoading()
@@ -216,39 +241,45 @@ class ShowDetailsView: UIView {
         scrollView.addSubview(contentView)
         addSubview(scrollView)
         
-        contentView.addSubview(bannerImageView)
-        contentView.addSubview(wishListButton)
-        contentView.addSubview(titleLabel)
-        contentView.addSubview(overviewLabel)
-        contentView.addSubview(detailsLabel)
-        contentView.addSubview(genresLabel)
-        contentView.addSubview(durationLabel)
-        contentView.addSubview(spokenLanguageLabel)
-        contentView.addSubview(countryLabel)
-        contentView.addSubview(castLabel)
-        contentView.addSubview(castCollectionView)
-        contentView.addSubview(producersLabel)
-        contentView.addSubview(producersCollectionView)
-        contentView.addSubview(videosLabel)
-        contentView.addSubview(videosCollectionView)
-        contentView.addSubview(imagesLabel)
-        contentView.addSubview(imagesCollectionView)
-        contentView.addSubview(recommendationsLabel)
-        contentView.addSubview(recommendationsCollectionView)
+        stackButton.addArrangedSubview(wishListButton)
+        stackButton.addArrangedSubview(rateButton)
+        
+        contentView.addSubviews(
+            bannerImageView,
+//            wishListButton,
+            stackButton,
+            titleLabel,
+            overviewLabel,
+            detailsLabel,
+            genresLabel,
+            voteCountLabel,
+            durationLabel,
+            spokenLanguageLabel,
+            countryLabel,
+            castLabel,
+            castCollectionView,
+            producersLabel,
+            producersCollectionView,
+            videosLabel,
+            videosCollectionView,
+            imagesLabel,
+            imagesCollectionView,
+            recommendationsLabel,
+            recommendationsCollectionView
+        )
     }
     
     private func setupConstraints(){
-        let padding: CGFloat = 24
         
         scrollView.pinToEdges(of: self)
         
         contentView.pinToEdges(of: scrollView)
         
         [
-            wishListButton,
             titleLabel,
             overviewLabel, 
             detailsLabel,
+            voteCountLabel,
             genresLabel,
             countryLabel,
             castLabel,
@@ -260,8 +291,8 @@ class ShowDetailsView: UIView {
             spokenLanguageLabel,
             recommendationsLabel
         ].forEach {
-            $0.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: padding).isActive = true
-            $0.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -padding).isActive = true
+            $0.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Metrics.medium).isActive = true
+            $0.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Metrics.medium).isActive = true
         }
         
         NSLayoutConstraint.activate([
@@ -274,55 +305,59 @@ class ShowDetailsView: UIView {
             bannerImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             bannerImageView.heightAnchor.constraint(equalToConstant: 430),
             
-            wishListButton.topAnchor.constraint(equalTo: bannerImageView.bottomAnchor, constant: -50),
-            wishListButton.heightAnchor.constraint(equalToConstant: 48),
             
-            titleLabel.topAnchor.constraint(equalTo: bannerImageView.bottomAnchor, constant: padding),
             
-            overviewLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: padding / 2),
+            stackButton.topAnchor.constraint(equalTo: bannerImageView.bottomAnchor, constant: -50),
+            stackButton.heightAnchor.constraint(equalToConstant: 48),
+            stackButton.leadingAnchor.constraint(equalTo: leadingAnchor),
+            stackButton.trailingAnchor.constraint(equalTo: trailingAnchor),
+            
+            titleLabel.topAnchor.constraint(equalTo: bannerImageView.bottomAnchor, constant: Metrics.medium),
+            
+            overviewLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: Metrics.small),
 
             
-            detailsLabel.topAnchor.constraint(equalTo: overviewLabel.bottomAnchor, constant: padding),
+            detailsLabel.topAnchor.constraint(equalTo: overviewLabel.bottomAnchor, constant: Metrics.medium),
 
+            voteCountLabel.topAnchor.constraint(equalTo: detailsLabel.bottomAnchor, constant: Metrics.small),
             
-            genresLabel.topAnchor.constraint(equalTo: detailsLabel.bottomAnchor, constant: padding / 2),
+            genresLabel.topAnchor.constraint(equalTo: voteCountLabel.bottomAnchor, constant: Metrics.small),
+            
+            countryLabel.topAnchor.constraint(equalTo: genresLabel.bottomAnchor, constant: Metrics.small),
+            
+            durationLabel.topAnchor.constraint(equalTo: countryLabel.bottomAnchor, constant: Metrics.small),
+            
+            spokenLanguageLabel.topAnchor.constraint(equalTo: durationLabel.bottomAnchor, constant: Metrics.small),
 
+            castLabel.topAnchor.constraint(equalTo: spokenLanguageLabel.bottomAnchor, constant: Metrics.medium),
             
-            countryLabel.topAnchor.constraint(equalTo: genresLabel.bottomAnchor, constant: padding / 2),
-            
-            durationLabel.topAnchor.constraint(equalTo: countryLabel.bottomAnchor, constant: padding / 2),
-            
-            spokenLanguageLabel.topAnchor.constraint(equalTo: durationLabel.bottomAnchor, constant: padding / 2),
-
-            castLabel.topAnchor.constraint(equalTo: spokenLanguageLabel.bottomAnchor, constant: padding),
-            
-            castCollectionView.topAnchor.constraint(equalTo: castLabel.bottomAnchor, constant: padding / 2),
+            castCollectionView.topAnchor.constraint(equalTo: castLabel.bottomAnchor, constant: Metrics.small),
             castCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             castCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            castCollectionView.heightAnchor.constraint(equalToConstant: 120),
+            castCollectionView.heightAnchor.constraint(equalToConstant: 130),
             
             
-            producersLabel.topAnchor.constraint(equalTo: castCollectionView.bottomAnchor, constant: padding),
+            producersLabel.topAnchor.constraint(equalTo: castCollectionView.bottomAnchor, constant: Metrics.medium),
             
-            producersCollectionView.topAnchor.constraint(equalTo: producersLabel.bottomAnchor, constant: padding / 2),
+            producersCollectionView.topAnchor.constraint(equalTo: producersLabel.bottomAnchor, constant: Metrics.small),
             
             producersCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             producersCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             producersCollectionView.heightAnchor.constraint(equalToConstant: 90),
             
             
-            videosLabel.topAnchor.constraint(equalTo: producersCollectionView.bottomAnchor, constant: padding),
+            videosLabel.topAnchor.constraint(equalTo: producersCollectionView.bottomAnchor, constant: Metrics.medium),
             
-            videosCollectionView.topAnchor.constraint(equalTo: videosLabel.bottomAnchor, constant: padding / 2),
+            videosCollectionView.topAnchor.constraint(equalTo: videosLabel.bottomAnchor, constant: Metrics.small),
             
             videosCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             videosCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             videosCollectionView.heightAnchor.constraint(equalToConstant: 100),
             
             
-            imagesLabel.topAnchor.constraint(equalTo: videosCollectionView.bottomAnchor, constant: padding),
+            imagesLabel.topAnchor.constraint(equalTo: videosCollectionView.bottomAnchor, constant: Metrics.medium),
             
-            imagesCollectionView.topAnchor.constraint(equalTo: imagesLabel.bottomAnchor, constant: padding / 2),
+            imagesCollectionView.topAnchor.constraint(equalTo: imagesLabel.bottomAnchor, constant: Metrics.small),
             
             imagesCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             imagesCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
@@ -330,7 +365,7 @@ class ShowDetailsView: UIView {
             
             recommendationsLabel.topAnchor.constraint(equalTo: imagesCollectionView.bottomAnchor),
             
-            recommendationsCollectionView.topAnchor.constraint(equalTo:recommendationsLabel.bottomAnchor, constant: padding / 2 ),
+            recommendationsCollectionView.topAnchor.constraint(equalTo:recommendationsLabel.bottomAnchor, constant: Metrics.small),
             recommendationsCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             recommendationsCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             
@@ -341,8 +376,11 @@ class ShowDetailsView: UIView {
 
 #Preview {
     ShowDetailsVC(
-        contentView: ShowDetailsView(),
-        show: Show.buildMock(),
-        viewModel: ShowDetailsViewModel()
+        contentView: ShowDetailsView(previousIndex: 1),
+        id: 1126166,
+        posterPath: "/gFFqWsjLjRfipKzlzaYPD097FNC.jpg",
+        type: .movie,
+        viewModel: ShowDetailsViewModel(),
+        previousIndex: 1
     )
 }
