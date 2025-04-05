@@ -8,7 +8,6 @@
 import UIKit
 
 final class ViewControllersFactory: ViewControllersFactoryProtocol {
-
    
     func makeSplashVC(flowDelegate: SplashFlowDelegate) -> SplashVC {
         let contentView = SplashView()
@@ -76,6 +75,13 @@ final class ViewControllersFactory: ViewControllersFactoryProtocol {
     
     func makeRatedListPageViewVC(flowDelegate: TabBarFlowDelegate) -> RatedListPageViewVC {
         let viewController = RatedListPageViewVC(flowDelegate: flowDelegate)
+        return viewController
+    }
+    
+    func makeMediaListVC(flowDelegate: MediaListFlowDelegate, tmdbType: TMDBType, tmdbCategory: TMDBCategory, currentIndex: Int) -> MediaListVC {
+        let contentVIew = MediaListView()
+        let viewModel = MediaListViewModel(tmdbType: tmdbType, tmdbCategory: tmdbCategory)
+        let viewController = MediaListVC(contentView: contentVIew, viewModel: viewModel, flowDelegate: flowDelegate, currentIndex: currentIndex)
         return viewController
     }
     

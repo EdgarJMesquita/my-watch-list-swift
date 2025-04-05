@@ -57,6 +57,12 @@
 		6D8F05C62D62942C00FBBE4D /* SplashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D8F05C52D62942C00FBBE4D /* SplashView.swift */; };
 		6D8F05C92D62947300FBBE4D /* UIViewController+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D8F05C82D62947300FBBE4D /* UIViewController+Ext.swift */; };
 		6D8F05CC2D6294E000FBBE4D /* MWLFlowCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D8F05CB2D6294E000FBBE4D /* MWLFlowCoordinator.swift */; };
+		6D903D972DA1A16E00ED47B9 /* MediaListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D903D962DA1A16E00ED47B9 /* MediaListVC.swift */; };
+		6D903D9B2DA1A19500ED47B9 /* MediaListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D903D9A2DA1A19500ED47B9 /* MediaListView.swift */; };
+		6D903D9E2DA1A36C00ED47B9 /* MediaListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D903D9D2DA1A36C00ED47B9 /* MediaListViewModel.swift */; };
+		6D903DA02DA1A3F700ED47B9 /* PersonService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D903D9F2DA1A3F700ED47B9 /* PersonService.swift */; };
+		6D903DA32DA1C5A100ED47B9 /* MediaListFlowDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D903DA22DA1C5A100ED47B9 /* MediaListFlowDelegate.swift */; };
+		6D903DA52DA1D2AB00ED47B9 /* PresentMediaListProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D903DA42DA1D2AA00ED47B9 /* PresentMediaListProtocol.swift */; };
 		6D95782A2D99DB0500446066 /* MediaStatesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D9578292D99DB0500446066 /* MediaStatesModel.swift */; };
 		6D98DFEB2D91A4A000334F27 /* Int+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D98DFEA2D91A4A000334F27 /* Int+Ext.swift */; };
 		6DA651E12D9CB3B400A7587B /* BannerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DA651E02D9CB3B400A7587B /* BannerService.swift */; };
@@ -179,6 +185,12 @@
 		6D8F05C52D62942C00FBBE4D /* SplashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashView.swift; sourceTree = "<group>"; };
 		6D8F05C82D62947300FBBE4D /* UIViewController+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Ext.swift"; sourceTree = "<group>"; };
 		6D8F05CB2D6294E000FBBE4D /* MWLFlowCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MWLFlowCoordinator.swift; sourceTree = "<group>"; };
+		6D903D962DA1A16E00ED47B9 /* MediaListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaListVC.swift; sourceTree = "<group>"; };
+		6D903D9A2DA1A19500ED47B9 /* MediaListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaListView.swift; sourceTree = "<group>"; };
+		6D903D9D2DA1A36C00ED47B9 /* MediaListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaListViewModel.swift; sourceTree = "<group>"; };
+		6D903D9F2DA1A3F700ED47B9 /* PersonService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonService.swift; sourceTree = "<group>"; };
+		6D903DA22DA1C5A100ED47B9 /* MediaListFlowDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaListFlowDelegate.swift; sourceTree = "<group>"; };
+		6D903DA42DA1D2AA00ED47B9 /* PresentMediaListProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentMediaListProtocol.swift; sourceTree = "<group>"; };
 		6D9578292D99DB0500446066 /* MediaStatesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaStatesModel.swift; sourceTree = "<group>"; };
 		6D98DFEA2D91A4A000334F27 /* Int+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int+Ext.swift"; sourceTree = "<group>"; };
 		6DA651E02D9CB3B400A7587B /* BannerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerService.swift; sourceTree = "<group>"; };
@@ -364,6 +376,7 @@
 				6D1F07432D9495A4002EEF4C /* PresentVideoPlayerProtocol.swift */,
 				6DAE011A2D9EBD510065824D /* PresentLoginProtocol.swift */,
 				6DAE01262D9F2B470065824D /* ResetAppProtocol.swift */,
+				6D903DA42DA1D2AA00ED47B9 /* PresentMediaListProtocol.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -439,7 +452,7 @@
 		6D63B6F72D85F515002E2136 /* Tabs */ = {
 			isa = PBXGroup;
 			children = (
-				6DC349D12D9DC3E300AC2C6A /* MWLLoginViewVC */,
+				6DC349D12D9DC3E300AC2C6A /* Login */,
 				6D0153DE2D970D0000E443C2 /* Profile */,
 				6DB316772D9C0FE700467CE3 /* WatchList */,
 				6D1F074B2D94D7C8002EEF4C /* Favorites */,
@@ -578,6 +591,49 @@
 			path = Coodinators;
 			sourceTree = "<group>";
 		};
+		6D903D952DA1A0E900ED47B9 /* MediaList */ = {
+			isa = PBXGroup;
+			children = (
+				6D903DA12DA1C58F00ED47B9 /* Protocols */,
+				6D903D9C2DA1A36100ED47B9 /* ViewModels */,
+				6D903D992DA1A18400ED47B9 /* Views */,
+				6D903D982DA1A17C00ED47B9 /* ViewControllers */,
+			);
+			path = MediaList;
+			sourceTree = "<group>";
+		};
+		6D903D982DA1A17C00ED47B9 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				6D903D962DA1A16E00ED47B9 /* MediaListVC.swift */,
+			);
+			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		6D903D992DA1A18400ED47B9 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				6D903D9A2DA1A19500ED47B9 /* MediaListView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		6D903D9C2DA1A36100ED47B9 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				6D903D9D2DA1A36C00ED47B9 /* MediaListViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		6D903DA12DA1C58F00ED47B9 /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				6D903DA22DA1C5A100ED47B9 /* MediaListFlowDelegate.swift */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
 		6DA651DF2D9CB39C00A7587B /* Services */ = {
 			isa = PBXGroup;
 			children = (
@@ -631,6 +687,7 @@
 		6DAB691A2D88400800ABC2A8 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				6D903D952DA1A0E900ED47B9 /* MediaList */,
 				6DAE011E2D9F05570065824D /* Rated */,
 				6DB0AF7A2D9DE24400E86959 /* Rating */,
 				6D06C09A2D8AEC94007F01E1 /* PersonDetails */,
@@ -880,14 +937,14 @@
 			path = MWLSuccessLoginVC;
 			sourceTree = "<group>";
 		};
-		6DC349D12D9DC3E300AC2C6A /* MWLLoginViewVC */ = {
+		6DC349D12D9DC3E300AC2C6A /* Login */ = {
 			isa = PBXGroup;
 			children = (
 				6D24850A2D9F632400A56FF2 /* Views */,
 				6D2485092D9F631100A56FF2 /* ViewControllers */,
 				6D2485062D9F52B100A56FF2 /* ViewModels */,
 			);
-			path = MWLLoginViewVC;
+			path = Login;
 			sourceTree = "<group>";
 		};
 		6DC532BC2D97960D00E15FE0 /* Constants */ = {
@@ -1030,6 +1087,7 @@
 				6DCD6C862D9B47BB00A5A7FC /* WatchListService.swift */,
 				6DB3167D2D9C21F700467CE3 /* ShowDetailsService.swift */,
 				6DAE01212D9F06070065824D /* RatedService.swift */,
+				6D903D9F2DA1A3F700ED47B9 /* PersonService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -1183,6 +1241,7 @@
 				6D1F074F2D94D7F9002EEF4C /* MWLUsersMediaListView.swift in Sources */,
 				6DB316792D9C0FFF00467CE3 /* WatchListPageViewVC.swift in Sources */,
 				6DB816572D7E681C005CE913 /* ShowDetailsView.swift in Sources */,
+				6D903D9B2DA1A19500ED47B9 /* MediaListView.swift in Sources */,
 				6DE880812D639B4400CD56AD /* EnvManager.swift in Sources */,
 				6D7D8B7A2D956F37001BAC07 /* FavoriteModel.swift in Sources */,
 				6DAE011B2D9EBD510065824D /* PresentLoginProtocol.swift in Sources */,
@@ -1190,6 +1249,7 @@
 				6DE8807C2D637F1A00CD56AD /* UIImageView+Ext.swift in Sources */,
 				6D1F07442D9495A4002EEF4C /* PresentVideoPlayerProtocol.swift in Sources */,
 				6DC585FA2D8C3E9A00DA03AA /* MWLCreditsCollectionView.swift in Sources */,
+				6D903DA02DA1A3F700ED47B9 /* PersonService.swift in Sources */,
 				6DB3166E2D9C047700467CE3 /* FavoritesPageViewVC.swift in Sources */,
 				6DEA84A52D63DDB500418B2B /* MWLSegmentedFilter.swift in Sources */,
 				6DB0A71D2D88D317002A57BD /* MWLCastViewCell.swift in Sources */,
@@ -1219,6 +1279,7 @@
 				6D69FD402D9D64DB00E5953A /* LoginView.swift in Sources */,
 				6DC585F72D8C37E200DA03AA /* String+Ext.swift in Sources */,
 				6DE6D1FB2D75F0640062DF6F /* PopularMoviesListVC.swift in Sources */,
+				6D903D9E2DA1A36C00ED47B9 /* MediaListViewModel.swift in Sources */,
 				6D59CAB52D89AE6400AB1ACA /* VideosModel.swift in Sources */,
 				6DB9DF0E2D8758790038D604 /* CreditsModel.swift in Sources */,
 				6DB0A71A2D88D061002A57BD /* PersonAvatar.swift in Sources */,
@@ -1226,6 +1287,7 @@
 				6D06C0A62D8AF1E7007F01E1 /* ShowDetailsFlowDelegate.swift in Sources */,
 				6DE6D2002D75FBDD0062DF6F /* TopRatedMoviesListVC.swift in Sources */,
 				6D66DF442D99E00C00934FB1 /* MWLPageViewVC.swift in Sources */,
+				6D903D972DA1A16E00ED47B9 /* MediaListVC.swift in Sources */,
 				6DC586152D8CB95500DA03AA /* MWLProducerViewCell.swift in Sources */,
 				6D8F05C92D62947300FBBE4D /* UIViewController+Ext.swift in Sources */,
 				6DABC6782D8E1B4600C4D609 /* SearchVC.swift in Sources */,
@@ -1253,6 +1315,7 @@
 				6DABC67A2D8E1B8D00C4D609 /* SearchView.swift in Sources */,
 				6D838E3A2D6BB7D20034162D /* BannerVC.swift in Sources */,
 				6D1F07462D94C872002EEF4C /* BannerDelegate.swift in Sources */,
+				6D903DA32DA1C5A100ED47B9 /* MediaListFlowDelegate.swift in Sources */,
 				6D67AD142D84DABC00CE18F6 /* ShowResponseModel.swift in Sources */,
 				6DFBA84F2D93745A007F8DEE /* SearchResponse.swift in Sources */,
 				6DC585FD2D8C46A000DA03AA /* PersonDetailsFlowDelegate.swift in Sources */,
@@ -1269,6 +1332,7 @@
 				6D112A502D94234A00D971A7 /* SearchViewModel.swift in Sources */,
 				6DC349CA2D9DA6FA00AC2C6A /* TopRatedShowListVC.swift in Sources */,
 				6D63B6F62D85E893002E2136 /* TabBarFlowDelegate.swift in Sources */,
+				6D903DA52DA1D2AB00ED47B9 /* PresentMediaListProtocol.swift in Sources */,
 				6DE8808B2D63ACD300CD56AD /* MWLError.swift in Sources */,
 				6DAB69252D884AA400ABC2A8 /* ShowDetailsModel.swift in Sources */,
 				6D112A532D94297300D971A7 /* MWLSearchResultCollectionViewCell.swift in Sources */,

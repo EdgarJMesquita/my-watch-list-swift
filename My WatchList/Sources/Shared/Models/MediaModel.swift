@@ -19,6 +19,8 @@ struct Media: Codable, Hashable {
     let voteCount: Int?
     let title: String?
     let profilePath: String?
+    let uuid: String = UUID().uuidString
+    
   
     func getTitle() -> String {
         name ?? title ?? "Unknown"
@@ -45,7 +47,7 @@ struct Media: Codable, Hashable {
     }
     
     func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
+        hasher.combine(uuid)
     }
 }
 

@@ -12,11 +12,11 @@ class TopRatedMoviesListVC: MovieListVC {
         "Top Rated"
     }
     
-    override func getTraktType() -> TMDBType {
+    override func getTMDBType() -> TMDBType {
         .movie
     }
     
-    override func getTraktCategory() -> TMDBCategory {
+    override func getTMDBCategory() -> TMDBCategory {
         .topRated
     }
 }

@@ -177,7 +177,3 @@ extension MWLUsersMediaListVC: MWLUsersMediaViewModelDelegate {
         setNeedsUpdateContentUnavailableConfiguration()
     }
 }
-
-//#Preview {
-//    MWLUsersMediaListVC(contentView: FavoritesListView(), viewModel: FavoritesViewModel(),type: .movies)
-//}

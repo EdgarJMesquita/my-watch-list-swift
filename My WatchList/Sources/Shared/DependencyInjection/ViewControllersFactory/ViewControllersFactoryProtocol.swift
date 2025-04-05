@@ -33,4 +33,6 @@ protocol ViewControllersFactoryProtocol: AnyObject {
     func makeLoginVC(flowDelegate: TabBarFlowDelegate) -> LoginVC
     
     func makeRatedListPageViewVC(flowDelegate: TabBarFlowDelegate) -> RatedListPageViewVC
+    
+    func makeMediaListVC(flowDelegate: MediaListFlowDelegate, tmdbType: TMDBType, tmdbCategory: TMDBCategory, currentIndex: Int) -> MediaListVC
 }

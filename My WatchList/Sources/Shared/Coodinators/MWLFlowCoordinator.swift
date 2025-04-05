@@ -96,6 +96,7 @@ extension MWLFlowCoordinator: FullScreenImageProtocol {
 
 // MARK: DetailsNavigation
 extension MWLFlowCoordinator: PersonDetailsFlowDelegate, ShowDetailsFlowDelegate, TabBarFlowDelegate {
+   
     func navigateToTabBarHome() {
         tabBarController?.setSelectedIndex(index: 0)
     }
@@ -106,6 +107,17 @@ extension MWLFlowCoordinator: PersonDetailsFlowDelegate, ShowDetailsFlowDelegate
     
     func navigateToRatedListPageView() {
         let viewController = viewControllerFactory.makeRatedListPageViewVC(flowDelegate: self)
+        navigationController?.pushViewController(viewController, animated: true)
+    }
+    
+    func navigateToMediaList(tmdbType: TMDBType, tmdbCategory: TMDBCategory) {
+        let currentIndex = navigationController?.viewControllers.endIndex ?? 1
+        let viewController = viewControllerFactory.makeMediaListVC(
+            flowDelegate: self,
+            tmdbType: tmdbType,
+            tmdbCategory: tmdbCategory,
+            currentIndex: currentIndex
+        )
         navigationController?.pushViewController(viewController, animated: true)
     }
 }
@@ -119,7 +131,6 @@ extension MWLFlowCoordinator: PresentLoginProtocol {
     
     func presentLoginSuccess(username: String){
         let viewController = viewControllerFactory.makeSuccessLoginVC(username: username)
-        print("presentLoginSuccess")
         navigateToHome()
         navigationController?.dismiss(animated: false)
         navigationController?.present(viewController, animated: true)
@@ -139,4 +150,8 @@ extension MWLFlowCoordinator: ResetAppProtocol {
         navigationController?.setNavigationBarHidden(false, animated: true)
         navigationController?.setViewControllers([tabBarController!], animated: false)
     }
+}
+
+extension MWLFlowCoordinator: MediaListFlowDelegate {
+    
 }

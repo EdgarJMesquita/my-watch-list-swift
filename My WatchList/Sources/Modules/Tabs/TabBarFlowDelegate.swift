@@ -8,7 +8,7 @@
 import Foundation
 
 
-protocol TabBarFlowDelegate: AnyObject, PresentShowDetailsProtocol, PresentPersonDetailsProtocol, ResetAppProtocol, PresentLoginProtocol {
+protocol TabBarFlowDelegate: AnyObject, PresentShowDetailsProtocol, PresentPersonDetailsProtocol, ResetAppProtocol, PresentLoginProtocol, PresentMediaListProtocol {
     func navigateToTabBarHome()
     func navigateToTabBarSearch()
     func navigateToRatedListPageView()

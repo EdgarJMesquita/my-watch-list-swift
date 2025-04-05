@@ -12,11 +12,11 @@ class AiringTodayShowsListVC: MovieListVC {
         "Airing Today"
     }
     
-    override func getTraktType() -> TMDBType {
+    override func getTMDBType() -> TMDBType {
         .tv
     }
     
-    override func getTraktCategory() -> TMDBCategory {
+    override func getTMDBCategory() -> TMDBCategory {
         .airingTotay
     }
 }

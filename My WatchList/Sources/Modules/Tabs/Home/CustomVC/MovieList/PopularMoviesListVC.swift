@@ -12,11 +12,11 @@ class PopularMoviesListVC: MovieListVC {
         "Popular movies"
     }
     
-    override func getTraktType() -> TMDBType {
+    override func getTMDBType() -> TMDBType {
         .movie
     }
     
-    override func getTraktCategory() -> TMDBCategory {
+    override func getTMDBCategory() -> TMDBCategory {
         .popular
     }
 }

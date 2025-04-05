@@ -32,6 +32,7 @@ class MWLTabBarController: UITabBarController {
         handleAuth()
     }
     
+    
     private func setup(){
         tabBar.barTintColor = .mwlSurface
         tabBar.isTranslucent = false
@@ -39,6 +40,7 @@ class MWLTabBarController: UITabBarController {
         tabBar.unselectedItemTintColor = .white
         tabBar.barStyle = .default
     }
+    
     
     private func handleAuth(){
         if PersistenceManager.getSessionId() == nil {
@@ -58,6 +60,7 @@ class MWLTabBarController: UITabBarController {
         }
      
     }
+    
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -109,6 +112,7 @@ class MWLTabBarController: UITabBarController {
         setupTabBarItemStyle(to: profileVC)
         return UINavigationController(rootViewController: profileVC)
     }
+    
     
     private func createLoginNC() -> UIViewController {
         let loginVC = LoginVC(contentView: LoginView(), viewModel: LoginViewModel(), flowDelegate: flowDelegate)

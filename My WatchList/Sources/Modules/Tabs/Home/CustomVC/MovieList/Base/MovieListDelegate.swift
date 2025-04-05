@@ -7,6 +7,6 @@
 
 import Foundation
 
-protocol MovieListDelegate: AnyObject {
+protocol MovieListDelegate: AnyObject, PresentMediaListProtocol {
     func movieDidTap(show: Media)
 }

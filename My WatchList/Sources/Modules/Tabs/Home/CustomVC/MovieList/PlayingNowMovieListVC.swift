@@ -12,11 +12,11 @@ class PlayingNowMovieListVC: MovieListVC {
         "Playing now"
     }
     
-    override func getTraktType() -> TMDBType {
+    override func getTMDBType() -> TMDBType {
         .movie
     }
     
-    override func getTraktCategory() -> TMDBCategory {
+    override func getTMDBCategory() -> TMDBCategory {
         .nowPlaying
     }
 }

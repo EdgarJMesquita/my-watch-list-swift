@@ -52,8 +52,6 @@ class HomeVC: MWLDataLoadingVC {
     }
 
     private func setupChildViewConstrollers(){
-
-   
         addViewController(
             childVC: BannerVC(
                 viewModel: BannerViewModel(),
@@ -125,6 +123,10 @@ class HomeVC: MWLDataLoadingVC {
 }
 
 extension HomeVC: MovieListDelegate, BannerDelegate {
+    func navigateToMediaList(tmdbType: TMDBType, tmdbCategory: TMDBCategory) {
+        flowDelegate?.navigateToMediaList(tmdbType: tmdbType, tmdbCategory: tmdbCategory)
+    }
+    
     func movieDidTap(show: Media) {
         flowDelegate?.presentShowDetails(id: show.id, posterPath: show.posterPath, type: show.getType())
     }

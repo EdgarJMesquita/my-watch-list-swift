@@ -12,10 +12,10 @@ class PersonDetailsViewModel {
     public private(set) var isFavorite = false
     public private(set) var person: Person?
     
-    private let tmdbService: ShowService
+    private let tmdbService: PersonService
 
     init(delegate: PersonDetailsViewModelDelegate? = nil) {
-        self.tmdbService = ShowService()
+        self.tmdbService = PersonService()
         self.delegate = delegate
     }
     

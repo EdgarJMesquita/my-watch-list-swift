@@ -1,14 +1,14 @@
 //
-//  FavoritesView.swift
+//  MediaListView.swift
 //  My WatchList
 //
-//  Created by Edgar Jonas Mesquita da Silva on 26/03/25.
+//  Created by Edgar Jonas Mesquita da Silva on 05/04/25.
 //
 
 import Foundation
 import UIKit
 
-class MWLUsersMediaListView: UIView {
+class MediaListView: UIView {
     
     lazy var collectionView: UICollectionView = {
         let collectionView = UICollectionView(
@@ -52,6 +52,4 @@ class MWLUsersMediaListView: UIView {
             collectionView.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
     }
-    
-    
 }

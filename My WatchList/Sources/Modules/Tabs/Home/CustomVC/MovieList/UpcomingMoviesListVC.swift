@@ -12,11 +12,11 @@ class UpcomingMoviesListVC: MovieListVC {
         "Upcoming"
     }
     
-    override func getTraktType() -> TMDBType {
+    override func getTMDBType() -> TMDBType {
         .movie
     }
     
-    override func getTraktCategory() -> TMDBCategory {
+    override func getTMDBCategory() -> TMDBCategory {
         .upcoming
     }
 }

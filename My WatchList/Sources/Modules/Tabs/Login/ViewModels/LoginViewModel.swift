@@ -32,7 +32,7 @@ class LoginViewModel {
         PersistenceManager.set(key: .accountId, value: account.id)
         
         if account.name.isEmpty {
-            return account.username ?? "Unknown"
+            return account.username
         } else {
             return account.name
         }

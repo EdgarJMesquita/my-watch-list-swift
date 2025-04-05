@@ -12,11 +12,11 @@ class OnTheAirShowListVC: MovieListVC {
         "On the air"
     }
     
-    override func getTraktType() -> TMDBType {
+    override func getTMDBType() -> TMDBType {
         .tv
     }
     
-    override func getTraktCategory() -> TMDBCategory {
+    override func getTMDBCategory() -> TMDBCategory {
         .onTheAir
     }
 }

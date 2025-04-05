@@ -23,9 +23,7 @@ class BannerViewModel {
         Task {
             do {
               
-                let shows = try await service.getTrendingMovies()
-                let index = Int.random(in: 0..<shows.count)
-                details = shows[index]
+                details = try await service.getTrendingMovies().randomElement()
                 delegate?.didLoadDetails()
                 
                 if PersistenceManager.getSessionId() != nil {

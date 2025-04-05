@@ -11,18 +11,19 @@ class MovieListVC: UIViewController {
     
     let viewModel: ShowViewModel
     weak var delegate: MovieListDelegate?
+
     let currentIndex: Int
 
     func getTitle() -> String {
         fatalError("getTitle() -> String has not been implemented")
     }
     
-    func getTraktType() -> TMDBType {
-        fatalError("getTraktType() -> TraktType has not been implemented")
+    func getTMDBType() -> TMDBType {
+        fatalError("getTMDBType() -> TraktType has not been implemented")
     }
     
-    func getTraktCategory() -> TMDBCategory {
-        fatalError("getTraktCategory() -> TraktCategory has not been implemented")
+    func getTMDBCategory() -> TMDBCategory {
+        fatalError("getTMDBCategory() -> TraktCategory has not been implemented")
     }
     
     private lazy var titleBabel: UILabel = {
@@ -34,11 +35,12 @@ class MovieListVC: UIViewController {
         return label
     }()
     
-    private lazy var subtitleLabel: UILabel = {
+    private lazy var seeMoreLabel: UILabel = {
         let label = UILabel()
         label.text = "See more"
         label.font = UIFont.systemFont(ofSize: 14, weight: .semibold)
         label.textColor = .mwlPrimary
+        label.isUserInteractionEnabled = true
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -77,12 +79,12 @@ class MovieListVC: UIViewController {
         super.viewDidLoad()
         setupUI()
         loadMovies()
-     
+        setupSeeMoreAction()
     }
     
     private func loadMovies(){
-        let type = getTraktType()
-        let category = getTraktCategory()
+        let type = getTMDBType()
+        let category = getTMDBCategory()
         
         Task {
             await viewModel.loadData(type: type, category: category)
@@ -96,7 +98,7 @@ class MovieListVC: UIViewController {
     
     private func setupHierarchy(){
         view.addSubview(titleBabel)
-        view.addSubview(subtitleLabel)
+        view.addSubview(seeMoreLabel)
         view.addSubview(collectionView)
     }
     
@@ -106,14 +108,24 @@ class MovieListVC: UIViewController {
             titleBabel.topAnchor.constraint(equalTo: view.topAnchor, constant: Metrics.medium),
             titleBabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Metrics.medium),
             
-            subtitleLabel.centerYAnchor.constraint(equalTo: titleBabel.centerYAnchor),
-            subtitleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Metrics.medium),
+            seeMoreLabel.centerYAnchor.constraint(equalTo: titleBabel.centerYAnchor),
+            seeMoreLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Metrics.medium),
             
             collectionView.topAnchor.constraint(equalTo: titleBabel.bottomAnchor,constant: Metrics.medium),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             collectionView.heightAnchor.constraint(equalToConstant: 193)
         ])
+    }
+    
+    private func setupSeeMoreAction(){
+        let recognizer = UITapGestureRecognizer(target: self, action: #selector(didTapSeeMore))
+        seeMoreLabel.addGestureRecognizer(recognizer)
+    }
+    
+    @objc
+    private func didTapSeeMore(){
+        delegate?.navigateToMediaList(tmdbType: getTMDBType(), tmdbCategory: getTMDBCategory())
     }
 }
 
