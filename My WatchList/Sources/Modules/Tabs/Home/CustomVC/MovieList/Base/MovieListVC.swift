@@ -19,11 +19,11 @@ class MovieListVC: UIViewController {
     }
     
     func getTMDBType() -> TMDBType {
-        fatalError("getTMDBType() -> TraktType has not been implemented")
+        fatalError("getTMDBType() -> getTMDBType has not been implemented")
     }
     
     func getTMDBCategory() -> TMDBCategory {
-        fatalError("getTMDBCategory() -> TraktCategory has not been implemented")
+        fatalError("getTMDBCategory() -> getTMDBCategory has not been implemented")
     }
     
     private lazy var titleBabel: UILabel = {

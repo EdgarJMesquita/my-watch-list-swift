@@ -25,39 +25,14 @@ class HomeView: UIView {
         return view
     }()
     
+    
     lazy var bannerContainer: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-//
-//    
-//    lazy var popularMoviesContainer: UIView = {
-//        let view = UIView()
-//        view.translatesAutoresizingMaskIntoConstraints = false
-//        return view
-//    }()
-//    
-//    lazy var popularShowsContainer: UIView = {
-//        let view = UIView()
-//        view.translatesAutoresizingMaskIntoConstraints = false
-//        return view
-//    }()
-//    
-//    
-//    lazy var trendingMoviesContainer: UIView = {
-//        let view = UIView()
-//        view.translatesAutoresizingMaskIntoConstraints = false
-//        return view
-//    }()
-//    
-//    lazy var trendingShowsContainer: UIView = {
-//        let view = UIView()
-//        view.translatesAutoresizingMaskIntoConstraints = false
-//        return view
-//    }()
+
     
-   
     init(){
         super.init(frame: .zero)
         setupUI()
@@ -72,6 +47,7 @@ class HomeView: UIView {
         setupHierarchy()
     }
 
+    
     private func setupHierarchy() {
         contentView.addSubview(bannerContainer)
 
@@ -93,7 +69,6 @@ class HomeView: UIView {
         let movieListHeight: CGFloat = 244
         let movieListSpacing: CGFloat = 32
         
-     
         
         for index in 0..<listCount {
             let container = UIView()

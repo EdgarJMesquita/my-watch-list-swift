@@ -6,7 +6,7 @@
 //
 
 import Foundation
-
+import UIKit
 
 enum PersistenceActionType {
     
@@ -24,6 +24,8 @@ enum PersistenceManager {
         case sessionId = "sessionId"
         case requestToken = "requestToken"
         case accountId = "accountId"
+        case user = "user"
+        case avatar = "avatar"
     }
     
     
@@ -183,6 +185,36 @@ enum PersistenceManager {
     static func clear(){
         for key in Keys.allCases {
             defaults.removeObject(forKey: key.rawValue)
+        }
+    }
+    
+    static func saveUser(user: User) {
+        guard let data = try? JSONEncoder().encode(user) else {
+            return
+        }
+        defaults.setValue(data, forKey: Keys.user.rawValue)
+    }
+    
+    static func getUser() -> User? {
+        guard let data = defaults.object(forKey: Keys.user.rawValue) as? Data else {
+            return nil
+        }
+        
+        return try? JSONDecoder().decode(User.self, from: data)
+    }
+    
+    static func saveAvatar(data: Data) {
+        defaults.setValue(data, forKey: Keys.avatar.rawValue)
+    }
+    
+    static func getAvatar() -> UIImage {
+        guard let data = defaults.data(forKey: Keys.avatar.rawValue) else {
+            return .mwlProfile
+        }
+        if let image = UIImage(data: data) {
+            return image.withRenderingMode(.alwaysOriginal)
+        } else {
+            return .mwlProfile
         }
     }
 }

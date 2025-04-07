@@ -10,10 +10,10 @@ import UIKit
 
 class MWLDataLoadingVC: UIViewController {
     
-    private var containerView: UIView!
+    private var containerView: UIView?
     
     func showLoadingView(opacity: Double = 0.4){
-        containerView = UIView(frame: view.bounds)
+        let containerView = UIView(frame: view.bounds)
         
 
         let imageView = UIImageView()
@@ -50,16 +50,17 @@ class MWLDataLoadingVC: UIViewController {
                 imageView.transform = scaleDown
             }
         }
+        
+        self.containerView = containerView
     }
     
     
     func dismissLoadingView(delay: Double = 0){
-        
         DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
             UIView.animate(withDuration: 1){
-                self.containerView.alpha = 0
+                self.containerView?.alpha = 0
             } completion: { _ in
-                self.containerView.removeFromSuperview()
+                self.containerView?.removeFromSuperview()
                 self.containerView = nil
             }
         }

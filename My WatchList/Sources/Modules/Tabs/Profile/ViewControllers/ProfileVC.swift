@@ -8,9 +8,12 @@
 import UIKit
 
 class ProfileVC: MWLBaseViewController {
+    
+    
     let contentView: ProfileView
     let viewModel: ProfileViewModel
     weak var flowDelegate: TabBarFlowDelegate?
+    
     
     init(contentView: ProfileView, viewModel: ProfileViewModel) {
         self.contentView = contentView
@@ -19,37 +22,28 @@ class ProfileVC: MWLBaseViewController {
         self.viewModel.delegate = self
     }
     
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
         viewModel.loadData()
         showLoadingView()
     }
+    
     
     private func setup(){
         view.addSubview(contentView)
         setupContentViewToBounds(contentView: contentView)
         view.backgroundColor = .mwlBackground
-        setupButtonAction()
         setupLogout()
+        setupUserRatedMedia()
     }
     
-    private func setupButtonAction(){
-        contentView.actionButton.addTarget(self, action: #selector(didTapActionButton), for: .touchUpInside)
-    }
-    
-    @objc
-    private func didTapActionButton(){
-        flowDelegate?.navigateToRatedListPageView()
-    }
     
     private func configure(with user: User){
         Task {
@@ -66,12 +60,21 @@ class ProfileVC: MWLBaseViewController {
     
     
     private func setupLogout(){
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Exit", style: .plain, target: self, action: #selector(didTapLogout))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            title: "Exit",
+            style: .plain,
+            target: self,
+            action: #selector(didTapLogout)
+        )
     }
     
     @objc
     private func didTapLogout(){
-        let alertController = UIAlertController(title: "Loggin out", message: "Do you really wanna logout?", preferredStyle: .alert)
+        let alertController = UIAlertController(
+            title: "Loggin out",
+            message: "Do you really wanna logout?",
+            preferredStyle: .alert
+        )
         alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel))
         alertController.addAction(
             UIAlertAction(
@@ -89,6 +92,29 @@ class ProfileVC: MWLBaseViewController {
         viewModel.logout()
         flowDelegate?.resetApp()
     }
+    
+    private func setupUserRatedMedia(){
+        let ratedMoviesListVC = UserRatedMoviesListVC(viewModel: UserRatedListViewModel(), delegate: self, currentIndex: 1)
+        
+        addViewController(
+            childVC: ratedMoviesListVC,
+            to: contentView.ratedMovieListContainer
+        )
+        
+        let ratedTVListVC = UserRatedTVListVC(viewModel: UserRatedListViewModel(), delegate: self, currentIndex: 1)
+        
+        addViewController(
+            childVC: ratedTVListVC,
+            to: contentView.ratedTVListContainer
+        )
+    }
+    
+    private func addViewController(childVC: UIViewController, to containerView: UIView){
+        addChild(childVC)
+        containerView.addSubview(childVC.view)
+        childVC.view.frame = containerView.bounds
+        childVC.didMove(toParent: self)
+    }
 }
 
 extension ProfileVC: ProfileViewModelDelegate {
@@ -97,6 +123,19 @@ extension ProfileVC: ProfileViewModelDelegate {
     }
 }
 
+extension ProfileVC: MWLUserRatedListDelegate {
+    func didTapSeeMore() {
+        flowDelegate?.navigateToRatedListPageView()
+    }
+    
+    func didTapMedia(media: Media) {
+        flowDelegate?.presentShowDetails(
+            id: media.id,
+            posterPath: media.getImagePath(), 
+            type: media.getType()
+        )
+    }
+}
 
 #Preview {
     ProfileVC(contentView: ProfileView(), viewModel: ProfileViewModel())

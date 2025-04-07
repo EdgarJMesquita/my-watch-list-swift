@@ -17,11 +17,14 @@ class ShowDetailsViewModel {
     public private(set) var mediaId: Int?
     public private(set) var mediaType: TMDBType?
     private let tmdbService: ShowDetailsService
-    
+    private var user: User?
+    private var sessionId: String?
     
     init(delegate: DetailsViewModelDelegate? = nil) {
         self.tmdbService = ShowDetailsService()
         self.delegate = delegate
+        user = PersistenceManager.getUser()
+        sessionId = PersistenceManager.getSessionId()
     }
     
     func loadData(id: Int, type: TMDBType){
@@ -40,13 +43,10 @@ class ShowDetailsViewModel {
     
     private func getMediaStates() async {
         do {
-            guard
-                PersistenceManager.getSessionId() != nil,
-                let mediaId = mediaId,
-                let mediaType = mediaType
-            else {
+            guard let sessionId, let mediaId, let mediaType else {
                 return
             }
+            
             let states = try await tmdbService.getMediaStatus(mediaId: mediaId, type: mediaType)
             isFavorite = states.favorite
             isWatchList = states.watchlist
@@ -64,17 +64,12 @@ class ShowDetailsViewModel {
         } catch {
             
         }
-   
     }
 
     
     
     func toogleFavorite() {
-        guard 
-            let details = self.details,
-            let accountId = PersistenceManager.getInt(key: .accountId),
-            PersistenceManager.getSessionId() != nil
-        else {
+        guard let details, let user, let sessionId else {
             return
         }
         
@@ -83,7 +78,7 @@ class ShowDetailsViewModel {
                 isFavorite.toggle()
                 delegate?.didLoadStates(isFavorite: isFavorite)
                 try await tmdbService.updateMediaFavorite(
-                    accountId: accountId,
+                    accountId: user.id,
                     mediaId: details.id,
                     mediaType: details.getType(),
                     favorite: isFavorite
@@ -97,10 +92,7 @@ class ShowDetailsViewModel {
     }
     
     func toogleWatchList() {
-        guard
-            let details = self.details,
-            let accountId = PersistenceManager.getInt(key: .accountId)
-        else {
+        guard let details, let user else {
             return
         }
         
@@ -109,7 +101,7 @@ class ShowDetailsViewModel {
                 isWatchList.toggle()
                 delegate?.didLoadStates(isWatchList: isWatchList)
                 try await tmdbService.updateMediaWatchList(
-                    accountId: accountId,
+                    accountId: user.id,
                     mediaId: details.id,
                     mediaType: details.getType(),
                     watchList: isWatchList
@@ -124,10 +116,7 @@ class ShowDetailsViewModel {
     
     
     func rateMovie(rate: Float) {
-        guard
-            let details = self.details,
-            PersistenceManager.getSessionId() != nil
-        else {
+        guard let details, let sessionId else {
             return
         }
         
@@ -145,16 +134,13 @@ class ShowDetailsViewModel {
             } catch {
                 print(error)
             }
-   
         }
         
     }
     
     
     func deleteRate() {
-        guard
-            let details = self.details,
-            PersistenceManager.getSessionId() != nil
+        guard let details, let sessionId
         else {
             return
         }

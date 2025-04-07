@@ -28,13 +28,15 @@ class LoginViewModel {
         let sessionId = try await service.fetchSessionId(requestToken: requestToken)
         PersistenceManager.saveSessionId(sessionId)
         
-        let account = try await service.getAccountDetails()
-        PersistenceManager.set(key: .accountId, value: account.id)
+        let user = try await service.getAccountDetails()
+        PersistenceManager.saveUser(user: user)
+    
+        await AvatarUtils.downloadAndFormat(user: user)
         
-        if account.name.isEmpty {
-            return account.username
+        if user.name.isEmpty {
+            return user.username
         } else {
-            return account.name
+            return user.name
         }
     }
     

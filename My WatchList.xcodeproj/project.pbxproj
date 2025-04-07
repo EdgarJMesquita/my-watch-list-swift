@@ -30,6 +30,12 @@
 		6D1F074F2D94D7F9002EEF4C /* MWLUsersMediaListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D1F074E2D94D7F9002EEF4C /* MWLUsersMediaListView.swift */; };
 		6D1F07512D94D8DA002EEF4C /* MWLUsersMediaViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D1F07502D94D8DA002EEF4C /* MWLUsersMediaViewModel.swift */; };
 		6D2485082D9F52BF00A56FF2 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D2485072D9F52BF00A56FF2 /* LoginViewModel.swift */; };
+		6D3CEA482DA3F70F005CFEDF /* BaseUserRatedListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D3CEA472DA3F70F005CFEDF /* BaseUserRatedListVC.swift */; };
+		6D3CEA4D2DA3F85C005CFEDF /* UserRatedListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D3CEA4C2DA3F85C005CFEDF /* UserRatedListViewModel.swift */; };
+		6D3CEA502DA3FAE2005CFEDF /* UserRatedMoviesListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D3CEA4F2DA3FAE2005CFEDF /* UserRatedMoviesListVC.swift */; };
+		6D3CEA532DA400F0005CFEDF /* UserRatedTVListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D3CEA522DA400F0005CFEDF /* UserRatedTVListVC.swift */; };
+		6D42E33D2DA2F14400682F91 /* UIImage+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D42E33C2DA2F14400682F91 /* UIImage+Ext.swift */; };
+		6D42E33F2DA2F1FF00682F91 /* AvatarUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D42E33E2DA2F1FF00682F91 /* AvatarUtils.swift */; };
 		6D59CAB12D89A48000AB1ACA /* MWLCastCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D59CAB02D89A48000AB1ACA /* MWLCastCollectionView.swift */; };
 		6D59CAB32D89AE0300AB1ACA /* MWLVideosCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D59CAB22D89AE0300AB1ACA /* MWLVideosCollectionView.swift */; };
 		6D59CAB52D89AE6400AB1ACA /* VideosModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D59CAB42D89AE6400AB1ACA /* VideosModel.swift */; };
@@ -156,6 +162,12 @@
 		6D1F074E2D94D7F9002EEF4C /* MWLUsersMediaListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MWLUsersMediaListView.swift; sourceTree = "<group>"; };
 		6D1F07502D94D8DA002EEF4C /* MWLUsersMediaViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MWLUsersMediaViewModel.swift; sourceTree = "<group>"; };
 		6D2485072D9F52BF00A56FF2 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
+		6D3CEA472DA3F70F005CFEDF /* BaseUserRatedListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseUserRatedListVC.swift; sourceTree = "<group>"; };
+		6D3CEA4C2DA3F85C005CFEDF /* UserRatedListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRatedListViewModel.swift; sourceTree = "<group>"; };
+		6D3CEA4F2DA3FAE2005CFEDF /* UserRatedMoviesListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRatedMoviesListVC.swift; sourceTree = "<group>"; };
+		6D3CEA522DA400F0005CFEDF /* UserRatedTVListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRatedTVListVC.swift; sourceTree = "<group>"; };
+		6D42E33C2DA2F14400682F91 /* UIImage+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Ext.swift"; sourceTree = "<group>"; };
+		6D42E33E2DA2F1FF00682F91 /* AvatarUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarUtils.swift; sourceTree = "<group>"; };
 		6D59CAB02D89A48000AB1ACA /* MWLCastCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MWLCastCollectionView.swift; sourceTree = "<group>"; };
 		6D59CAB22D89AE0300AB1ACA /* MWLVideosCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MWLVideosCollectionView.swift; sourceTree = "<group>"; };
 		6D59CAB42D89AE6400AB1ACA /* VideosModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideosModel.swift; sourceTree = "<group>"; };
@@ -293,6 +305,7 @@
 			isa = PBXGroup;
 			children = (
 				6DE8808A2D63ACD300CD56AD /* MWLError.swift */,
+				6D42E33E2DA2F1FF00682F91 /* AvatarUtils.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -411,6 +424,41 @@
 				6D69FD3F2D9D64DB00E5953A /* LoginView.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		6D3CEA492DA3F758005CFEDF /* RatedList */ = {
+			isa = PBXGroup;
+			children = (
+				6D3CEA512DA400E2005CFEDF /* UserRatedTVList */,
+				6D3CEA4E2DA3FAC1005CFEDF /* UserRatedMoviesList */,
+				6D3CEA4A2DA3F769005CFEDF /* Base */,
+			);
+			path = RatedList;
+			sourceTree = "<group>";
+		};
+		6D3CEA4A2DA3F769005CFEDF /* Base */ = {
+			isa = PBXGroup;
+			children = (
+				6D3CEA4C2DA3F85C005CFEDF /* UserRatedListViewModel.swift */,
+				6D3CEA472DA3F70F005CFEDF /* BaseUserRatedListVC.swift */,
+			);
+			path = Base;
+			sourceTree = "<group>";
+		};
+		6D3CEA4E2DA3FAC1005CFEDF /* UserRatedMoviesList */ = {
+			isa = PBXGroup;
+			children = (
+				6D3CEA4F2DA3FAE2005CFEDF /* UserRatedMoviesListVC.swift */,
+			);
+			path = UserRatedMoviesList;
+			sourceTree = "<group>";
+		};
+		6D3CEA512DA400E2005CFEDF /* UserRatedTVList */ = {
+			isa = PBXGroup;
+			children = (
+				6D3CEA522DA400F0005CFEDF /* UserRatedTVListVC.swift */,
+			);
+			path = UserRatedTVList;
 			sourceTree = "<group>";
 		};
 		6D59CAAE2D89A46500AB1ACA /* CastCollectionView */ = {
@@ -578,6 +626,7 @@
 				6D98DFEA2D91A4A000334F27 /* Int+Ext.swift */,
 				6D0153E32D971A1A00E443C2 /* URL+Ext.swift */,
 				6DAE011C2D9ED33F0065824D /* Float+Ext.swift */,
+				6D42E33C2DA2F14400682F91 /* UIImage+Ext.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -803,6 +852,7 @@
 		6DAE01232D9F28200065824D /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				6D3CEA492DA3F758005CFEDF /* RatedList */,
 				6D0153DF2D970D0D00E443C2 /* ProfileVC.swift */,
 			);
 			path = ViewControllers;
@@ -1245,10 +1295,12 @@
 				6DE880812D639B4400CD56AD /* EnvManager.swift in Sources */,
 				6D7D8B7A2D956F37001BAC07 /* FavoriteModel.swift in Sources */,
 				6DAE011B2D9EBD510065824D /* PresentLoginProtocol.swift in Sources */,
+				6D3CEA532DA400F0005CFEDF /* UserRatedTVListVC.swift in Sources */,
 				6D98DFEB2D91A4A000334F27 /* Int+Ext.swift in Sources */,
 				6DE8807C2D637F1A00CD56AD /* UIImageView+Ext.swift in Sources */,
 				6D1F07442D9495A4002EEF4C /* PresentVideoPlayerProtocol.swift in Sources */,
 				6DC585FA2D8C3E9A00DA03AA /* MWLCreditsCollectionView.swift in Sources */,
+				6D3CEA4D2DA3F85C005CFEDF /* UserRatedListViewModel.swift in Sources */,
 				6D903DA02DA1A3F700ED47B9 /* PersonService.swift in Sources */,
 				6DB3166E2D9C047700467CE3 /* FavoritesPageViewVC.swift in Sources */,
 				6DEA84A52D63DDB500418B2B /* MWLSegmentedFilter.swift in Sources */,
@@ -1268,6 +1320,7 @@
 				6DC532C02D97970A00E15FE0 /* RequestService.swift in Sources */,
 				6D67AD122D84D76100CE18F6 /* ShowService.swift in Sources */,
 				6DC532BE2D97961B00E15FE0 /* Constants.swift in Sources */,
+				6D42E33F2DA2F1FF00682F91 /* AvatarUtils.swift in Sources */,
 				6D59CAB12D89A48000AB1ACA /* MWLCastCollectionView.swift in Sources */,
 				6D06C0992D8AEB81007F01E1 /* PersonModel.swift in Sources */,
 				6DC586062D8C802700DA03AA /* MWLImagesCollectionView.swift in Sources */,
@@ -1280,6 +1333,7 @@
 				6DC585F72D8C37E200DA03AA /* String+Ext.swift in Sources */,
 				6DE6D1FB2D75F0640062DF6F /* PopularMoviesListVC.swift in Sources */,
 				6D903D9E2DA1A36C00ED47B9 /* MediaListViewModel.swift in Sources */,
+				6D42E33D2DA2F14400682F91 /* UIImage+Ext.swift in Sources */,
 				6D59CAB52D89AE6400AB1ACA /* VideosModel.swift in Sources */,
 				6DB9DF0E2D8758790038D604 /* CreditsModel.swift in Sources */,
 				6DB0A71A2D88D061002A57BD /* PersonAvatar.swift in Sources */,
@@ -1288,6 +1342,7 @@
 				6DE6D2002D75FBDD0062DF6F /* TopRatedMoviesListVC.swift in Sources */,
 				6D66DF442D99E00C00934FB1 /* MWLPageViewVC.swift in Sources */,
 				6D903D972DA1A16E00ED47B9 /* MediaListVC.swift in Sources */,
+				6D3CEA482DA3F70F005CFEDF /* BaseUserRatedListVC.swift in Sources */,
 				6DC586152D8CB95500DA03AA /* MWLProducerViewCell.swift in Sources */,
 				6D8F05C92D62947300FBBE4D /* UIViewController+Ext.swift in Sources */,
 				6DABC6782D8E1B4600C4D609 /* SearchVC.swift in Sources */,
@@ -1325,6 +1380,7 @@
 				6DAE011D2D9ED33F0065824D /* Float+Ext.swift in Sources */,
 				6DC586082D8C809E00DA03AA /* MWLImageViewCell.swift in Sources */,
 				6DB316712D9C08FF00467CE3 /* MWLUsersMediaListVC.swift in Sources */,
+				6D3CEA502DA3FAE2005CFEDF /* UserRatedMoviesListVC.swift in Sources */,
 				6DAE01182D9EB1560065824D /* RatingView.swift in Sources */,
 				6D0153E02D970D0D00E443C2 /* ProfileVC.swift in Sources */,
 				6DC349CC2D9DA7A500AC2C6A /* OnTheAirShowListVC.swift in Sources */,

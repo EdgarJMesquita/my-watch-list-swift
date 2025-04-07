@@ -38,6 +38,11 @@ class RequestService {
             components.queryItems?.append(URLQueryItem(name: "session_id", value: sessionId))
         }
         
+        if let user = PersistenceManager.getUser() {
+            let language = "\(user.iso639_1)-\(user.iso3166_1)"
+            components.queryItems?.append(URLQueryItem(name: "language", value: language))
+        }
+        
         guard let url = components.url else {
             throw MWLError.invalidURL
         }

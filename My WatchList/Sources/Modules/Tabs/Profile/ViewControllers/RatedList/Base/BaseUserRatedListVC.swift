@@ -77,12 +77,14 @@ class BaseUserRatedListVC: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         setupUI()
         loadMovies()
         setupSeeMoreAction()
     }
+
     
     private func loadMovies(){
         let type = getUserListType()
@@ -123,7 +125,7 @@ class BaseUserRatedListVC: UIViewController {
     
     @objc
     private func didTapSeeMore(){
-//        delegate?.navigateToMediaList(tmdbType: getTMDBType(), tmdbCategory: getTMDBCategory())
+        delegate?.didTapSeeMore()
     }
 }
 
@@ -155,7 +157,16 @@ extension BaseUserRatedListVC: UICollectionViewDelegate {
 extension BaseUserRatedListVC: UserRatedListViewModelDelegate {
     func didUpdateItems() {
         DispatchQueue.main.async { [weak self] in
-            self?.collectionView.reloadData()
+            guard let self else {
+                return
+            }
+            collectionView.reloadData()
+            
+            if viewModel.items.isEmpty {
+                collectionView.setEmptyMessage("No data")
+            } else {
+                collectionView.clearEmptyMessage()
+            }
         }
     }
 }
@@ -163,4 +174,5 @@ extension BaseUserRatedListVC: UserRatedListViewModelDelegate {
 
 protocol MWLUserRatedListDelegate: AnyObject {
     func didTapMedia(media: Media)
+    func didTapSeeMore()
 }

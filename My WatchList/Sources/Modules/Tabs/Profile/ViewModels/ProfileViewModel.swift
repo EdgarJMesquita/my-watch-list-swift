@@ -10,13 +10,17 @@ import AuthenticationServices
 
 class ProfileViewModel {
     
-    let service: AuthService
+
+    let ratedService: RatedService
+    let authService: AuthService
+    
     private(set) var user: User? = nil
     weak var delegate: ProfileViewModelDelegate?
     
     
     init() {
-        self.service = AuthService()
+        self.authService = AuthService()
+        self.ratedService = RatedService()
     }
     
     
@@ -30,10 +34,13 @@ class ProfileViewModel {
     
     private func getAccountDetails(){
         Task {
-            let user = try await service.getAccountDetails()
-            PersistenceManager.set(key: .accountId, value: user.id)
+            let user = try await authService.getAccountDetails()
+            PersistenceManager.saveUser(user: user)
             delegate?.didLoadAccountDetails(user: user)
             self.user = user
+  
+            await AvatarUtils.downloadAndFormat(user: user)
+            
         }
     }
     

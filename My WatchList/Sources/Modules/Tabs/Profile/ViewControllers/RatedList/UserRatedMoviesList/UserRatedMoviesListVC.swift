@@ -7,7 +7,7 @@
 
 import Foundation
 
-class RatedMoviesListVC: MWLUserRatedListVC {
+class UserRatedMoviesListVC: BaseUserRatedListVC {
     override func getTitle() -> String {
         "My Rated Movies"
     }

@@ -73,4 +73,6 @@ extension UIImageView {
         layer.addSublayer(gradientLayer)
    
     }
+    
 }
+

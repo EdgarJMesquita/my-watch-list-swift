@@ -14,6 +14,8 @@ class MWLUsersMediaViewModel {
     private var isSearching = false
     private let service: MWLUsersMediaServiceProtocol
     let type: UserMediaType
+    private var user: User?
+    private var sessionId: String?
 
     weak var delegate: MWLUsersMediaViewModelDelegate?
     
@@ -21,6 +23,8 @@ class MWLUsersMediaViewModel {
         self.service = service
         self.type = type
         self.delegate = delegate
+        user = PersistenceManager.getUser()
+        sessionId = PersistenceManager.getSessionId()
     }
     
     var activeItems: [Media] {
@@ -34,10 +38,10 @@ class MWLUsersMediaViewModel {
         }
         
         Task {
-            guard let accountId = PersistenceManager.getInt(key: .accountId) else {
+            guard let user else {
                 return
             }
-            let items = try await service.getItems(accountId: accountId, type: type)
+            let items = try await service.getItems(accountId: user.id, type: type)
             self.items = items
             self.delegate?.didUpdateItems()
         }
@@ -45,8 +49,8 @@ class MWLUsersMediaViewModel {
     
     func checkSession() -> Bool {
         guard
-            PersistenceManager.getInt(key: .accountId) != nil,
-            PersistenceManager.getString(key: .sessionId) != nil
+            sessionId != nil,
+            user != nil
         else {
             return false
         }

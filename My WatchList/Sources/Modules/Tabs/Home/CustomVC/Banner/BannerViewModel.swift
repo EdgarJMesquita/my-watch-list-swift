@@ -13,17 +13,19 @@ class BannerViewModel {
     private let service: BannerService
     private(set) var mediaStates: MediaStates?
     public private(set) var details: Media?
+    private var medias: [Media] = []
     
     init(delegate: BannerViewModelDelegate? = nil) {
         self.service = BannerService()
         self.delegate = delegate
     }
     
+    
     func loadData(type: TMDBType, category: TMDBCategory) async {
         Task {
             do {
-              
-                details = try await service.getTrendingMovies().randomElement()
+                medias = try await service.getTrendingMovies()
+                details = medias.randomElement()
                 delegate?.didLoadDetails()
                 
                 if PersistenceManager.getSessionId() != nil {
@@ -39,10 +41,16 @@ class BannerViewModel {
     }
     
     
+    func updateFromListRandomly(){
+        details = medias.randomElement()
+        delegate?.didLoadDetails()
+    }
+    
+    
     func toogleWatchList() {
         guard
             let details = self.details,
-            let accountId = PersistenceManager.getInt(key: .accountId)
+            let user = PersistenceManager.getUser()
         else {
             return
         }
@@ -52,7 +60,7 @@ class BannerViewModel {
                 isWatchList.toggle()
                 delegate?.isWatchListDidLoad(isWatchList: isWatchList)
                 try await service.updateMediaWatchList(
-                    accountId: accountId,
+                    accountId: user.id,
                     mediaId: details.id,
                     mediaType: details.getType(),
                     watchList: isWatchList

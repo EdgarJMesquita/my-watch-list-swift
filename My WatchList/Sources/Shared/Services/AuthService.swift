@@ -127,4 +127,6 @@ class AuthService: RequestService {
         let path = "/account"
         return try await request(with: path, model: User.self)
     }
+    
+   
 }

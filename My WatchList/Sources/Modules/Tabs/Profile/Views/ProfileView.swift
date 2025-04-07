@@ -10,12 +10,25 @@ import Lottie
 
 class ProfileView: UIView {
     
+    lazy var scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        return scrollView
+    }()
+    
+    lazy var contentView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
     
     lazy var avatarImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.layer.cornerRadius = 75
         imageView.layer.masksToBounds = true
         imageView.contentMode = .scaleAspectFill
+        imageView.layer.borderWidth = 2
+        imageView.layer.borderColor = UIColor.mwlPrimary.cgColor
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -30,11 +43,19 @@ class ProfileView: UIView {
         return label
     }()
     
-    lazy var actionButton: MWLButton = {
-        let button = MWLButton(title: "My rated movies/shows")
-        return button
+    lazy var ratedMovieListContainer: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }()
     
+    lazy var ratedTVListContainer: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
@@ -50,28 +71,47 @@ class ProfileView: UIView {
     }
     
     private func setupHierarchy(){
-        addSubviews(
+        addSubview(scrollView)
+        scrollView.addSubview(contentView)
+        contentView.addSubviews(
             avatarImageView,
             titleLabel,
-            actionButton
+            ratedMovieListContainer,
+            ratedTVListContainer
         )
     }
     
     private func setupConstraints(){
+        let movieListHeight: CGFloat = 244
+        
+        scrollView.pinToEdges(of: self)
+        
+        contentView.pinToEdges(of: scrollView)
+        
         NSLayoutConstraint.activate([
-            avatarImageView.topAnchor.constraint(equalTo: topAnchor, constant: 50),
+            contentView.heightAnchor.constraint(equalToConstant: 2 * 430),
+            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            
+            avatarImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 50),
             avatarImageView.heightAnchor.constraint(equalToConstant: 150),
             avatarImageView.widthAnchor.constraint(equalToConstant: 150),
-            avatarImageView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            avatarImageView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             
             titleLabel.topAnchor.constraint(equalTo: avatarImageView.bottomAnchor, constant: Metrics.medium),
-            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor,constant: Metrics.medium),
-            titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor,constant: -Metrics.medium),
+            titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor,constant: Metrics.medium),
+            titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor,constant: -Metrics.medium),
             
-            actionButton.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -Metrics.medium),
-            actionButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Metrics.medium),
-            actionButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Metrics.medium),
-            actionButton.heightAnchor.constraint(equalToConstant: 40)
+            ratedMovieListContainer.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 30),
+            ratedMovieListContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            ratedMovieListContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            ratedMovieListContainer.heightAnchor.constraint(equalToConstant: movieListHeight),
+            
+            ratedTVListContainer.topAnchor.constraint(equalTo: ratedMovieListContainer.bottomAnchor, constant: 30),
+            ratedTVListContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            ratedTVListContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            ratedTVListContainer.heightAnchor.constraint(equalToConstant: movieListHeight),
+            
         ])
     }
   

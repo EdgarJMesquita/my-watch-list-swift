@@ -94,6 +94,12 @@ class BannerVC: UIViewController {
         setupUI()
     }
     
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        viewModel.updateFromListRandomly()
+    }
+
     
     private func loadMovies() {
         Task {

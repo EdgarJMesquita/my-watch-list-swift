@@ -57,6 +57,8 @@ class MWLTabBarController: UITabBarController {
                 createWatchListNC(),
                 createProfileNC()
             ]
+            
+            addCornerRadiusToLastTabItem()
         }
      
     }
@@ -108,7 +110,9 @@ class MWLTabBarController: UITabBarController {
         let profileVC = ProfileVC(contentView: ProfileView(), viewModel: ProfileViewModel())
         profileVC.flowDelegate = flowDelegate
         profileVC.title = "Profile"
-        profileVC.tabBarItem = UITabBarItem(title: "Profile", image: .mwlProfile, tag: 4)
+        
+        profileVC.tabBarItem = UITabBarItem(title: "Profile", image: PersistenceManager.getAvatar(), tag: 4)
+        
         setupTabBarItemStyle(to: profileVC)
         return UINavigationController(rootViewController: profileVC)
     }
@@ -137,5 +141,18 @@ class MWLTabBarController: UITabBarController {
     func setSelectedIndex(index: Int){
         selectedIndex = index
     }
+    
+    
+    func addCornerRadiusToLastTabItem(){
+        if let imageView = tabBar.subviews.last?.subviews.first as? UIImageView {
+            imageView.layer.cornerRadius = 12
+            imageView.layer.masksToBounds = true
+            imageView.contentMode = .scaleAspectFill
+            imageView.clipsToBounds = true
+            imageView.layer.borderWidth = 1
+            imageView.layer.borderColor = UIColor.mwlPrimary.cgColor
+        }
+    }
+    
     
 }

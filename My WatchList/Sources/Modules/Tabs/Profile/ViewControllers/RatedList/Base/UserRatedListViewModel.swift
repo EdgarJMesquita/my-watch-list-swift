@@ -16,8 +16,8 @@ class UserRatedListViewModel {
     weak var delegate: UserRatedListViewModelDelegate?
     
     
-    init(service: RatedService, type: UserMediaType) {
-        self.service = service
+    init() {
+        self.service = RatedService()
         self.user = PersistenceManager.getUser()
     }
     
@@ -28,9 +28,7 @@ class UserRatedListViewModel {
         }
         
         Task {
-            guard let user else {
-                return
-            }
+          
             let items = try await service.getItems(accountId: accountId, type: type)
             self.items = items
             self.delegate?.didUpdateItems()
