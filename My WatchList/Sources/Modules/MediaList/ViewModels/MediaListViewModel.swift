@@ -9,14 +9,18 @@ import Foundation
 import UIKit
 
 class MediaListViewModel {
+    
     private(set) var isLoading = false
     private let service: ShowService
     private(set) var isSearching = false
+    
     private var medias: [Media] = []
     private var filtered: [Media] = []
     private var page: Int = 1
+    
     private let tmdbType: TMDBType
     private let tmdbCategory: TMDBCategory
+    
     weak var delegate: MediaListViewModelDelegate?
     
     var activeMedias: [Media]  {

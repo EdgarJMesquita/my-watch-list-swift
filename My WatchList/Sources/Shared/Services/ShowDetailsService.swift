@@ -14,7 +14,7 @@ class ShowDetailsService: RequestService {
 
     func getShowDetails(for movieId: Int, type: TMDBType) async throws -> ShowDetails {
         let path = "/\(type.rawValue)/\(movieId)"
-        let queryItems = [URLQueryItem(name: "append_to_response", value: "credits,videos,recommendations,images")]
+        let queryItems = [URLQueryItem(name: "append_to_response", value: "credits,videos,recommendations,images,reviews")]
         return try await request(with: path, model: ShowDetails.self, queryItems: queryItems)
     }
     

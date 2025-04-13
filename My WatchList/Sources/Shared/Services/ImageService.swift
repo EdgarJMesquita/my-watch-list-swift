@@ -21,7 +21,7 @@ class ImageService {
     let cache = NSCache<NSString, UIImage>()
     
     func downloadTMDBImage(path: String) async -> UIImage? {
-        let urlString = "\(tmdbBaseURL)\(path)"
+        let urlString = getTMDBURL(path: path)
         
         guard let url = URL(string: urlString) else { return nil }
         
@@ -100,6 +100,10 @@ class ImageService {
             print(error)
             return nil
         }
+    }
+    
+    func getTMDBURL(path: String) -> String {
+        return "\(tmdbBaseURL)\(path)"
     }
     
     private func getThumbUrl(from video: Video) -> String? {

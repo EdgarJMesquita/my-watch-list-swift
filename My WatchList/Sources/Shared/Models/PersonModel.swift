@@ -36,16 +36,7 @@ struct Person: Codable {
         case combinedCredits = "combined_credits"
     }
     
-    func getFavorite() -> Favorite {
-        Favorite(
-            id: id,
-            title: name,
-            mediaType: .person,
-            voteCount: nil,
-            imagePath: profilePath,
-            description: biography
-        )
-    }
+ 
 }
 
 // MARK: - CombinedCredits

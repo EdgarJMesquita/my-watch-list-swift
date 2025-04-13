@@ -40,6 +40,8 @@ struct ShowDetails: Codable {
     
     let recommendations: Recommendations?
 
+    let reviews: Reviews?
+    
     func getType() -> TMDBType {
         title != nil ? .movie : .tv
     }
@@ -68,22 +70,14 @@ struct ShowDetails: Codable {
         case voteCount = "vote_count"
         case credits
         case videos, recommendations
+        case reviews
     }
     
     func getTitle() -> String {
         return title ?? name ?? "Unknown"
     }
     
-    func getFavorite() -> Favorite {
-        Favorite(
-            id: id,
-            title: getTitle(),
-            mediaType: title != nil ? .movie : .tv,
-            voteCount: voteCount,
-            imagePath: posterPath,
-            description: overview
-        )
-    }
+ 
 }
 
 // MARK: - Genre
@@ -137,5 +131,50 @@ struct Recommendations: Codable {
         case page, results
         case totalPages = "total_pages"
         case totalResults = "total_results"
+    }
+}
+
+
+struct Reviews: Codable {
+    let page: Int
+    let results: [Review]
+    let totalPages, totalResults: Int
+
+    enum CodingKeys: String, CodingKey {
+        case page, results
+        case totalPages = "total_pages"
+        case totalResults = "total_results"
+    }
+}
+
+struct Review: Codable {
+    let author: String
+    let content: String
+    let createdAt: String
+    let updatedAt: String
+    let id: String
+    let url: String
+    let authorDetails: AuthorDetails
+   
+    enum CodingKeys: String, CodingKey {
+        case author, content
+        case createdAt = "created_at"
+        case updatedAt = "updated_at"
+        case id
+        case url
+        case authorDetails = "author_details"
+    }
+}
+
+
+struct AuthorDetails: Codable {
+    let name: String
+    let username: String
+    let avatarPath: String?
+    let rating: Double?
+    
+    enum CodingKeys: String, CodingKey {
+        case name, username, rating
+        case avatarPath = "avatar_path"
     }
 }

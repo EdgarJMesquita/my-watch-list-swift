@@ -11,10 +11,12 @@ import Hero
 
 class MediaListVC: UIViewController {
     
+    
     let currentIndex: Int
     let contentView: MediaListView
     let viewModel: MediaListViewModel
     weak var flowDelegate: MediaListFlowDelegate?
+    
     
     enum Section {
         case main
@@ -71,16 +73,15 @@ class MediaListVC: UIViewController {
     
     
     private func configureDataSource(){
-        dataSource = UICollectionViewDiffableDataSource(
-            collectionView: contentView.collectionView,
-            cellProvider: { collectionView, indexPath, media in
-                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MWLSearchResultCollectionViewCell.identifier, for: indexPath) as? MWLSearchResultCollectionViewCell else {
-                    return UICollectionViewCell()
-                }
-                cell.configure(with: media, currentIndex: 2)
-                return cell
+        dataSource = UICollectionViewDiffableDataSource(collectionView: contentView.collectionView)
+        { collectionView, indexPath, media in
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MWLSearchResultCollectionViewCell.identifier, for: indexPath) as? MWLSearchResultCollectionViewCell else {
+                return UICollectionViewCell()
             }
-        )
+            cell.configure(with: media, currentIndex: 2)
+            return cell
+        }
+        
     }
     
     
@@ -93,9 +94,11 @@ class MediaListVC: UIViewController {
         }
     }
     
+    
     private func bindCollectionView(){
         contentView.collectionView.delegate = self
     }
+    
     
     override func updateContentUnavailableConfiguration(using state: UIContentUnavailableConfigurationState) {
         if viewModel.isSearching && viewModel.activeMedias.isEmpty {
@@ -107,14 +110,19 @@ class MediaListVC: UIViewController {
         }
     }
     
+    
 }
 
+
 extension MediaListVC: MediaListViewModelDelegate {
+    
+    
     func viewModel(isLoading: Bool) {
         DispatchQueue.main.async { [weak self] in
             self?.setNeedsUpdateContentUnavailableConfiguration()
         }
     }
+    
     
     func viewModel(medias: [Media]) {
         DispatchQueue.main.async { [weak self] in
@@ -123,10 +131,13 @@ extension MediaListVC: MediaListViewModelDelegate {
         }
     }
     
+    
 }
 
 
 extension MediaListVC: UICollectionViewDelegate {
+    
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let media = viewModel.getMediaAtIndex(indexPath.item)
         
@@ -138,6 +149,7 @@ extension MediaListVC: UICollectionViewDelegate {
    
     }
     
+    
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         let offsetY = scrollView.contentOffset.y
         let contentHeight = scrollView.contentSize.height
@@ -147,12 +159,17 @@ extension MediaListVC: UICollectionViewDelegate {
             viewModel.loadMore()
         }
     }
+    
+    
 }
 
+
 extension MediaListVC: UISearchResultsUpdating {
+    
     func updateSearchResults(for searchController: UISearchController) {
         viewModel.onSearch(for: searchController)
     }
+    
 }
 
 

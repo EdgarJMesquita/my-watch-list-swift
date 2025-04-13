@@ -14,6 +14,7 @@ class BannerVC: UIViewController {
     weak var delegate: BannerDelegate?
     weak var flowDelegate: TabBarFlowDelegate?
     let currentIndex: Int
+    var timer: Timer?
     
     
     lazy var bannerImageView: UIImageView = {
@@ -92,12 +93,21 @@ class BannerVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+      
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        timer?.invalidate()
+        timer = nil
     }
     
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        viewModel.updateFromListRandomly()
+        timer = Timer.scheduledTimer(withTimeInterval: 15, repeats: true) { [weak self] _ in
+            self?.viewModel.updateFromListRandomly()
+        }
     }
 
     

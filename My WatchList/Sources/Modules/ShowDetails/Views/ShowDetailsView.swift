@@ -211,6 +211,21 @@ class ShowDetailsView: UIView {
         let collectionView = MWLCreditsCollectionView(currentIndex: previousIndex + 1)
         return collectionView
     }()
+    
+    private lazy var reviewsLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Reviews"
+        label.textColor = .mwlTitle
+        label.font = UIFont.systemFont(ofSize: 20, weight: .semibold)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    
+    lazy var reviewsCollectionView: MWLReviewsCollectionView = {
+        let collectionView = MWLReviewsCollectionView()
+        return collectionView
+    }()
 
     init(previousIndex: Int) {
         self.previousIndex = previousIndex
@@ -246,7 +261,6 @@ class ShowDetailsView: UIView {
         
         contentView.addSubviews(
             bannerImageView,
-//            wishListButton,
             stackButton,
             titleLabel,
             overviewLabel,
@@ -265,7 +279,9 @@ class ShowDetailsView: UIView {
             imagesLabel,
             imagesCollectionView,
             recommendationsLabel,
-            recommendationsCollectionView
+            recommendationsCollectionView,
+            reviewsLabel,
+            reviewsCollectionView
         )
     }
     
@@ -289,14 +305,15 @@ class ShowDetailsView: UIView {
             videosLabel,
             durationLabel,
             spokenLanguageLabel,
-            recommendationsLabel
+            recommendationsLabel,
+            reviewsLabel
         ].forEach {
             $0.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Metrics.medium).isActive = true
             $0.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Metrics.medium).isActive = true
         }
         
         NSLayoutConstraint.activate([
-            contentView.heightAnchor.constraint(equalToConstant: 3 * 600),
+            contentView.heightAnchor.constraint(equalToConstant: 3 * 650),
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
             contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             
@@ -368,6 +385,13 @@ class ShowDetailsView: UIView {
             recommendationsCollectionView.topAnchor.constraint(equalTo:recommendationsLabel.bottomAnchor, constant: Metrics.small),
             recommendationsCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             recommendationsCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            
+            reviewsLabel.topAnchor.constraint(equalTo: recommendationsCollectionView.bottomAnchor, constant: Metrics.medium),
+            
+            reviewsCollectionView.topAnchor.constraint(equalTo:reviewsLabel.bottomAnchor, constant: Metrics.small),
+            reviewsCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            reviewsCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            
             
         ])
     }

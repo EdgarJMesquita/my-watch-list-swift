@@ -186,6 +186,7 @@ class ShowDetailsVC: UIViewController {
             setupImages()
             setupVideos()
             setupRecommendations()
+            setupReviews()
             contentView.activityIndicator.stopAnimating()
         }
     }
@@ -319,6 +320,18 @@ class ShowDetailsVC: UIViewController {
         contentView.recommendationsCollectionView.configure(with: recommendations)
     }
     
+    private func setupReviews(){
+        guard
+            let reviews = viewModel.details?.reviews?.results,
+            reviews.count > 0
+        else {
+            contentView.reviewsCollectionView.setEmptyMessage("No reviews")
+            return
+        }
+        contentView.reviewsCollectionView.customDelegate = self
+        contentView.reviewsCollectionView.configure(with: reviews)
+    }
+    
     
     @objc
     func presentOverview(){
@@ -372,6 +385,14 @@ extension ShowDetailsVC: MWLImagesCollectionViewDelegate {
 extension ShowDetailsVC: MWLCredtisCollectionViewDelegate {
     func didTapShow(show: Media) {
         flowDelegate?.presentShowDetails(id: show.id, posterPath: show.posterPath, type: show.getType())
+    }
+}
+
+extension ShowDetailsVC: MWLReviewsCollectionViewDelegate {
+    func didTapReview(review: Review) {
+        if let url = URL(string: review.url) {
+            UIApplication.shared.open(url)
+        }
     }
 }
 

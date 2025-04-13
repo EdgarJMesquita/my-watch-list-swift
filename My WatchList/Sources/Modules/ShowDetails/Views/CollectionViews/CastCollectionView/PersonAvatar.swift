@@ -20,6 +20,9 @@ struct PersonAvatar: View {
                 }
                 .frame(width: 70,height: 70)
                 .clipShape(Circle())
+                .overlay {
+                    Circle().stroke(.blue, lineWidth: 1)
+                }
             }
             Text(name)
                 .fontWeight(.semibold)

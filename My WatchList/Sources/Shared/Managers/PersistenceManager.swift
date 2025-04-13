@@ -20,7 +20,6 @@ enum PersistenceManager {
     
     
     enum Keys: String, CaseIterable {
-        case favorites = "favorites"
         case sessionId = "sessionId"
         case requestToken = "requestToken"
         case accountId = "accountId"
@@ -28,90 +27,6 @@ enum PersistenceManager {
         case avatar = "avatar"
     }
     
-    
-    static func updateWith(favorite: Favorite, actionType: PersistenceActionType) async throws {
-        do {
-            var favorites = try await retrieveFavorites()
-            
-            switch actionType {
-            case .add:
-                favorites.append(favorite)
-                try save(favorites: favorites)
-            case .remove:
-                favorites.removeAll { $0.id == favorite.id }
-                try save(favorites: favorites)
-            }
-            
-        } catch {
-            throw MWLError.invalidURL
-        }
-    }
-    
-    
-    static func retrieveFavorites() async throws -> [Favorite] {
-        
-        guard let data = defaults.object(forKey: Keys.favorites.rawValue) as? Data else {
-            return []
-        }
-        
-        do {
-            let decoder = JSONDecoder()
-            let followers = try decoder.decode([Favorite].self, from: data)
-            return followers
-        } catch {
-            throw MWLError.invalidURL
-       
-        }
-        
-    }
-    
-    
-    static func save(favorites: [Favorite]) throws  {
-        
-        do {
-            let encoder = JSONEncoder()
-            let encodedFavorites = try encoder.encode(favorites)
-            defaults.set(encodedFavorites, forKey: Keys.favorites.rawValue)
-        } catch {
-            throw MWLError.invalidURL
-        }
-        
-    }
-    
-    
-    static func checkFavorite(id: Int) async -> Bool {
-        
-        do {
-            let favorites = try await retrieveFavorites()
-            let index = favorites.firstIndex { $0.id == id }
-            return index != nil
-        } catch {
-            return false
-        }
-        
-    }
-    
-    
-    static func toogleFavorite(favorite: Favorite) async throws -> Bool {
-        
-        do {
-            var favorites = try await retrieveFavorites()
-            
-            let index = favorites.firstIndex { $0.id == favorite.id }
-            
-            if index != nil {
-                favorites.removeAll { $0.id == favorite.id }
-            } else {
-                favorites.append(favorite)
-            }
-            
-            try save(favorites: favorites)
-            return index == nil // if index is nil it means the favorite was added
-        } catch {
-            throw MWLError.invalidURL
-        }
-        
-    }
     
     
     static func saveSessionId(_ sessionId: String){
@@ -155,7 +70,6 @@ enum PersistenceManager {
     }
     
     
-    
     static func set(key: Keys, value: Any){
         defaults.set(value, forKey: key.rawValue)
     }
@@ -182,11 +96,13 @@ enum PersistenceManager {
         
     }
     
+    
     static func clear(){
         for key in Keys.allCases {
             defaults.removeObject(forKey: key.rawValue)
         }
     }
+    
     
     static func saveUser(user: User) {
         guard let data = try? JSONEncoder().encode(user) else {
@@ -194,6 +110,7 @@ enum PersistenceManager {
         }
         defaults.setValue(data, forKey: Keys.user.rawValue)
     }
+    
     
     static func getUser() -> User? {
         guard let data = defaults.object(forKey: Keys.user.rawValue) as? Data else {
@@ -203,9 +120,11 @@ enum PersistenceManager {
         return try? JSONDecoder().decode(User.self, from: data)
     }
     
+    
     static func saveAvatar(data: Data) {
         defaults.setValue(data, forKey: Keys.avatar.rawValue)
     }
+    
     
     static func getAvatar() -> UIImage {
         guard let data = defaults.data(forKey: Keys.avatar.rawValue) else {
@@ -217,4 +136,6 @@ enum PersistenceManager {
             return .mwlProfile
         }
     }
+    
+    
 }
