@@ -2,6 +2,10 @@
 
 This APP integrates with TMDB API.
 
+## Preview
+
+<video width="300" height="648" src="docs/Demo.mp4" autoplay loop muted  type="video/mp4"></video>
+
 ## Stack
 
 - Swift
@@ -35,12 +39,6 @@ The app follows the MVVM-C architecture, using delegation, dependency injection,
 - Child UIViewControllers
 
 ## Showcase
-
-### Video
-
-<iframe width="300" height="648" src="https://www.youtube.com/embed/6L39b476WBc?si=tt9YRUjznXUgDqkj" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-
-### Prints
 
 <div>
 <img src="docs/Splash.png" width="32%"/>
