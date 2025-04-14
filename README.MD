@@ -4,7 +4,9 @@ This APP integrates with TMDB API.
 
 ## Preview
 
-<video width="300" height="648" src="docs/Demo.mp4" autoplay loop muted  type="video/mp4"></video>
+![Demo.gif](docs/Demo.gif)
+
+🎥 [Click here to view the demo](https://www.youtube.com/watch?v=6L39b476WBc)
 
 ## Stack
 
