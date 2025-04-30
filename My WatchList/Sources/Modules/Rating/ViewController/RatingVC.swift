@@ -99,5 +99,10 @@ protocol RatingVCDelegate: AnyObject {
 
 
 #Preview {
-    RatingVC(contentView: RatingView(), title: "The Cleaner", initialValue: 5.5, showDelete: false)
+    RatingVC(
+        contentView: RatingView(),
+        title: "The Cleaner",
+        initialValue: 5.5, 
+        showDelete: false
+    )
 }

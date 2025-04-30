@@ -39,6 +39,14 @@ class MWLTabBarController: UITabBarController {
         tabBar.tintColor = .mwlPrimary
         tabBar.unselectedItemTintColor = .white
         tabBar.barStyle = .default
+
+        let appearance = UITabBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = .mwlSurface
+        
+        tabBar.standardAppearance = appearance
+        tabBar.scrollEdgeAppearance = appearance
+       
     }
     
     
@@ -133,8 +141,8 @@ class MWLTabBarController: UITabBarController {
             NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16, weight: .medium)
         ]
         viewController.tabBarItem.setTitleTextAttributes(attributtedString, for: .normal)
-        viewController.tabBarItem.imageInsets = UIEdgeInsets(top: 8, left: 0, bottom: -8, right: 0)
-        viewController.tabBarItem.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 8)
+        viewController.tabBarItem.imageInsets = UIEdgeInsets(top: 4, left: 0, bottom: -4, right: 0)
+        viewController.tabBarItem.titlePositionAdjustment = UIOffset(horizontal: 10, vertical: -16)
     }
     
     
